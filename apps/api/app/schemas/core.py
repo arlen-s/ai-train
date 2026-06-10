@@ -319,6 +319,45 @@ class ReportExportResult(BaseModel):
     source_versions: Dict[str, str]
 
 
+class DatasetDriftReport(BaseModel):
+    id: str
+    source_dataset_id: str
+    target_dataset_id: str
+    drift_score: float = Field(ge=0)
+    scenario_deltas: Dict[str, int]
+    weak_scenarios: List[str]
+    recommended_actions: List[str]
+
+
+class ModelRegressionGuardrail(BaseModel):
+    id: str
+    candidate_model_id: str
+    baseline_model_id: str
+    metric_deltas: Dict[str, float]
+    promotion_decision: Literal["allow", "needs-review", "block"]
+    blocked_reasons: List[str]
+    safety_notes: List[str]
+
+
+class AugmentationPreset(BaseModel):
+    id: str
+    target_issue: str
+    transforms: List[str]
+    target_scenarios: List[str]
+    linked_badcases: List[str]
+
+
+class RLEpisodeCluster(BaseModel):
+    id: str
+    failure_category: str
+    cluster_size: int = Field(gt=0)
+    linked_episodes: List[str]
+    representative_badcases: List[str]
+    scenario_tags: List[str]
+    average_energy_proxy: float = Field(ge=0)
+    next_actions: List[str]
+
+
 class DatasetSummary(BaseModel):
     version_id: str
     coverage_rate: float = Field(ge=0, le=1)

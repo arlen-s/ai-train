@@ -212,6 +212,17 @@
         <li>报告包含验证命令，便于下一位 AI agent 或面试复盘时确认交付状态。</li>
       </ul>
     </section>
+
+    <section class="panel" aria-label="V2 增强闭环">
+      <h2>V2 增强闭环</h2>
+      <p>增强 API：<code>/api/datasets/drift</code>、<code>/api/model-guardrails/regression</code>、<code>/api/augmentation-presets</code>、<code>/api/rl/episode-clusters</code>。</p>
+      <ul>
+        <li>Dataset drift 对比 dataset-v1 到 dataset-v2 的 scenario deltas，提示密集动态障碍、雨天、强眩光补采。</li>
+        <li>model regression guardrail 阻止 unseen small-object recall 回退的模型直接 promoted。</li>
+        <li>augmentation presets 覆盖 shadow/glare、rain/fog/blur、small-object/occlusion 长尾样本扩充。</li>
+        <li>episode clusters 聚合 rl-stuck、near-miss 等重复失败，并链接 representative Badcase 和 next actions。</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>

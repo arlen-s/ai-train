@@ -1,8 +1,10 @@
 from app.schemas.core import (
     AnnotationTask,
+    AugmentationPreset,
     BadcaseRecord,
     BadcaseSummary,
     DatasetVersion,
+    DatasetDriftReport,
     DashboardSummary,
     DatasetSummary,
     DynamicActor,
@@ -10,6 +12,7 @@ from app.schemas.core import (
     LabelClass,
     LabelSchemaVersion,
     ModelVersion,
+    ModelRegressionGuardrail,
     PlannerBaseline,
     PolicyComparison,
     PolicyComparisonEntry,
@@ -20,6 +23,7 @@ from app.schemas.core import (
     RLEpisodeReplay,
     RLPolicyVersion,
     ReplayFrame,
+    RLEpisodeCluster,
     RLSummary,
     RLSplitMetric,
     Scenario,
@@ -791,6 +795,103 @@ POLICY_COMPARISONS = [
             "unseen narrow-passage success rate 仍需 guardrail",
         ],
     )
+]
+
+
+DATASET_DRIFT_REPORT = DatasetDriftReport(
+    id="dataset-drift-v1-v2",
+    source_dataset_id="dataset-v1",
+    target_dataset_id="dataset-v2",
+    drift_score=0.27,
+    scenario_deltas={
+        "scenario-dry-flat-clear": 0,
+        "scenario-wet-slope-shadow": 26,
+        "scenario-dense-dynamic-pet": 14,
+    },
+    weak_scenarios=["rain", "glare", "narrow-boundary", "dense-dynamic-obstacle"],
+    recommended_actions=[
+        "补充密集动态障碍、雨天和强眩光样本，避免 dataset-v2 对晴天平地场景过拟合",
+        "对 scenario-dense-dynamic-pet 建立 weekly drift review",
+    ],
+)
+
+
+MODEL_REGRESSION_GUARDRAILS = [
+    ModelRegressionGuardrail(
+        id="guardrail-det-yolo-v2",
+        candidate_model_id="model-det-yolo-v2",
+        baseline_model_id="model-det-yolo-v1",
+        metric_deltas={
+            "mAP": 0.06,
+            "recall": 0.04,
+            "unseen_small_object_recall": -0.03,
+            "latency_ms": 4.0,
+        },
+        promotion_decision="needs-review",
+        blocked_reasons=["unseen small-object recall regressed below safety review threshold"],
+        safety_notes=[
+            "允许进入 candidate，不允许直接 promoted",
+            "需要补充 small-object hard negative 和 Badcase 回归",
+        ],
+    ),
+    ModelRegressionGuardrail(
+        id="guardrail-seg-boundary-v1",
+        candidate_model_id="model-seg-boundary-v1",
+        baseline_model_id="model-seg-boundary-v0",
+        metric_deltas={"mean_iou": 0.05, "boundary_iou": 0.03, "forbidden_zone_error_rate": -0.02},
+        promotion_decision="allow",
+        blocked_reasons=[],
+        safety_notes=["仍需关注 shadow boundary drift，但当前未触发 blocking guardrail"],
+    ),
+]
+
+
+AUGMENTATION_PRESETS = [
+    AugmentationPreset(
+        id="aug-shadow-glare",
+        target_issue="shadow/glare confusion",
+        transforms=["brightness-shift", "contrast-jitter", "shadow-polygon", "sun-glare-overlay"],
+        target_scenarios=["scenario-wet-slope-shadow", "scenario-dense-dynamic-pet"],
+        linked_badcases=["badcase-shadow-boundary-001"],
+    ),
+    AugmentationPreset(
+        id="aug-rain-fog-blur",
+        target_issue="rain/fog/blur quality gap",
+        transforms=["rain-streak", "fog-overlay", "motion-blur", "low-light-noise"],
+        target_scenarios=["rain", "spring-evening", "after-rain"],
+        linked_badcases=[],
+    ),
+    AugmentationPreset(
+        id="aug-small-object-occlusion",
+        target_issue="small object and partial occlusion",
+        transforms=["random-crop", "copy-paste-small-stone", "grass-occlusion", "scale-jitter"],
+        target_scenarios=["scenario-dense-dynamic-pet"],
+        linked_badcases=["badcase-small-stone-001", "badcase-pet-occlusion-002"],
+    ),
+]
+
+
+RL_EPISODE_CLUSTERS = [
+    RLEpisodeCluster(
+        id="cluster-rl-stuck-narrow-001",
+        failure_category="rl-stuck",
+        cluster_size=9,
+        linked_episodes=["episode-v2-dynamic-014", "episode-v2-narrow-006", "episode-v2-narrow-011"],
+        representative_badcases=["badcase-ppo-stuck-014"],
+        scenario_tags=["narrow-passage", "dense-obstacle", "unseen"],
+        average_energy_proxy=1.34,
+        next_actions=["increase local-loop penalty", "add narrow-passage curriculum", "compare with rule-coverage-planner"],
+    ),
+    RLEpisodeCluster(
+        id="cluster-near-miss-dynamic-001",
+        failure_category="near-miss",
+        cluster_size=6,
+        linked_episodes=["episode-v2-dynamic-014", "episode-v2-pet-003"],
+        representative_badcases=["badcase-sim-gap-001"],
+        scenario_tags=["dynamic-pet", "sensor-gap", "sim-to-real"],
+        average_energy_proxy=1.18,
+        next_actions=["raise dynamic obstacle response guardrail", "escalate simulator limitation to V3"],
+    ),
 ]
 
 

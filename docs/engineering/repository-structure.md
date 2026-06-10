@@ -129,3 +129,9 @@ The Phase 6 vertical slice adds split-level RL generalization evaluation records
 The Phase 7 vertical slice adds structured project summary and Markdown report export APIs. `apps/api/app/services/reports.py` assembles deterministic report content from existing V2 source versions, including JD mapping, data coverage, annotation QC, perception results, RL generalization, Badcase loop, limitations, V3 plan, and verification commands.
 
 The report API returns content for portfolio delivery without introducing PDF, Word, cloud storage, or document rendering dependencies.
+
+## Phase 8 Implementation Note
+
+The Phase 8 vertical slice adds the remaining V2 enhancement metadata for Dataset drift, model regression guardrails, synthetic augmentation presets, and RL episode clusters. `apps/api/app/services/enhancements.py` owns these lookup workflows.
+
+These records close the loop for distribution monitoring, model promotion safety, long-tail sample expansion, and repeated RL failure grouping without adding external DVC, augmentation, or embedding-clustering dependencies.

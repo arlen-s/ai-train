@@ -4,16 +4,19 @@ from fastapi import FastAPI, HTTPException
 
 from app.schemas.core import (
     AnnotationTask,
+    AugmentationPreset,
     BadcaseCreateRequest,
     BadcaseRecommendation,
     BadcaseRecord,
     BadcaseUpdateRequest,
     DashboardSummary,
     DatasetCoverage,
+    DatasetDriftReport,
     DatasetVersion,
     EvaluationReport,
     LabelSchemaVersion,
     ModelVersion,
+    ModelRegressionGuardrail,
     PlannerBaseline,
     PolicyComparison,
     QCUpdateRequest,
@@ -24,6 +27,7 @@ from app.schemas.core import (
     ProjectSummaryReport,
     ReportExportRequest,
     ReportExportResult,
+    RLEpisodeCluster,
     Scenario,
     ScenarioCoverage,
     TrainingRun,
@@ -42,6 +46,12 @@ from app.services.badcases import (
     update_badcase_or_none,
 )
 from app.services.dashboard import get_dashboard_summary
+from app.services.enhancements import (
+    get_dataset_drift_report,
+    list_augmentation_presets,
+    list_model_regression_guardrails,
+    list_rl_episode_clusters,
+)
 from app.services.generalization import (
     get_rl_evaluation_or_none,
     list_policy_comparisons,
@@ -109,6 +119,11 @@ def datasets() -> list[DatasetVersion]:
     return list_datasets()
 
 
+@app.get("/api/datasets/drift", response_model=DatasetDriftReport)
+def dataset_drift() -> DatasetDriftReport:
+    return get_dataset_drift_report()
+
+
 @app.get("/api/datasets/{dataset_id}", response_model=DatasetVersion)
 def dataset_detail(dataset_id: str) -> DatasetVersion:
     dataset = get_dataset_or_none(dataset_id)
@@ -172,6 +187,11 @@ def model_versions() -> list[ModelVersion]:
     return list_model_versions()
 
 
+@app.get("/api/model-guardrails/regression", response_model=list[ModelRegressionGuardrail])
+def model_regression_guardrails() -> list[ModelRegressionGuardrail]:
+    return list_model_regression_guardrails()
+
+
 @app.get("/api/evaluations", response_model=list[EvaluationReport])
 def evaluation_reports() -> list[EvaluationReport]:
     return list_evaluation_reports()
@@ -227,6 +247,11 @@ def badcase_recommendation(badcase_id: str) -> BadcaseRecommendation:
     return recommendation
 
 
+@app.get("/api/augmentation-presets", response_model=list[AugmentationPreset])
+def augmentation_presets() -> list[AugmentationPreset]:
+    return list_augmentation_presets()
+
+
 @app.get("/api/rl/environments", response_model=list[RLEnvironmentVersion])
 def rl_environments() -> list[RLEnvironmentVersion]:
     return list_rl_environments()
@@ -261,6 +286,11 @@ def rl_baselines() -> list[PlannerBaseline]:
 @app.get("/api/rl/evaluations", response_model=list[RLEvaluationReport])
 def rl_evaluations() -> list[RLEvaluationReport]:
     return list_rl_evaluations()
+
+
+@app.get("/api/rl/episode-clusters", response_model=list[RLEpisodeCluster])
+def rl_episode_clusters() -> list[RLEpisodeCluster]:
+    return list_rl_episode_clusters()
 
 
 @app.get("/api/rl/evaluations/{report_id}", response_model=RLEvaluationReport)

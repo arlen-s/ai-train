@@ -43,4 +43,8 @@ Current scope:
 - Badcase detail, filtering, status update, and recommendation workflow at `/api/badcases`
 - structured project summary report at `/api/reports/project-summary`
 - Markdown report export at `/api/reports/export`
+- Dataset drift report at `/api/datasets/drift`
+- model regression guardrail records at `/api/model-guardrails/regression`
+- augmentation presets at `/api/augmentation-presets`
+- RL episode clusters at `/api/rl/episode-clusters`
 - V3 backlog seed records
