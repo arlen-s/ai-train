@@ -111,3 +111,9 @@ The seed label schema covers LabelImg, LabelMe, CVAT, detection classes, segment
 The Phase 4 vertical slice adds perception training run, Model version, evaluation report, and perception Badcase APIs. `apps/api/app/services/perception.py` owns metadata lookup, source validation, Badcase creation, and root-cause-to-action recommendation mapping.
 
 `packages/evaluation` now owns controlled metric helpers for precision, recall, F1, and binary-mask IoU so future training scripts and report generation can reuse metric logic outside FastAPI. The API still records training and evaluation metadata only; heavy perception training remains outside the request path.
+
+## Phase 5 Implementation Note
+
+The Phase 5 vertical slice adds a deterministic 2D mowing RL environment in `packages/rl_env`. It exposes a lightweight Gymnasium-style `reset` and `step` contract, discrete actions, coverage rewards, collision and boundary termination, simulated LiDAR, and ultrasonic observations without adding heavy training dependencies.
+
+`apps/api/app/services/rl_training.py` owns RL metadata lookup for environment versions, PPO policy versions, planner baselines, and 3D-ready replay records. The API records PPO training workflow metadata only; Stable-Baselines3 training is deferred to a future training script outside FastAPI request handling.

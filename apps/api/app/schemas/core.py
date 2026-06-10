@@ -187,6 +187,72 @@ class BadcaseCreateRequest(BaseModel):
     linked_evaluation_report_id: Optional[str] = None
 
 
+class RLEnvironmentVersion(BaseModel):
+    id: str
+    map_generator: str
+    observation_space: List[str]
+    action_space: Dict[str, List[str]]
+    reward_config: Dict[str, float]
+    termination_rules: List[str]
+    sensor_modalities: List[str]
+    scenario_features: List[str]
+    simulator_adapter: str
+    max_steps: int = Field(gt=0)
+
+
+class RLPolicyVersion(BaseModel):
+    id: str
+    environment_version_id: str
+    algorithm: Literal["PPO", "random", "rule-based"]
+    training_config: Dict[str, float]
+    curriculum_stage: str
+    domain_randomization: List[str]
+    metrics: Dict[str, float]
+    artifact_path: str
+    linked_evaluation_reports: List[str]
+    linked_badcases: List[str]
+
+
+class PlannerBaseline(BaseModel):
+    id: str
+    name: str
+    baseline_type: Literal["random", "rule-based"]
+    environment_version_id: str
+    metrics: Dict[str, float]
+    description: str
+
+
+class DynamicActor(BaseModel):
+    actor_id: str
+    actor_type: str
+    trajectory: List[List[int]]
+
+
+class ReplayFrame(BaseModel):
+    step: int = Field(ge=0)
+    robot_position: List[int]
+    action: str
+    reward: float
+    covered_cells: int = Field(ge=0)
+    lidar: List[float]
+    ultrasonic: List[float]
+    event: str
+
+
+class RLEpisodeReplay(BaseModel):
+    id: str
+    policy_version_id: str
+    environment_version_id: str
+    scenario_id: str
+    three_d_ready: bool
+    map: Dict[str, int]
+    path: List[List[int]]
+    dynamic_actors: List[DynamicActor]
+    frames: List[ReplayFrame]
+    event_markers: List[str]
+    timeline_reference: str
+
+
 class DatasetSummary(BaseModel):
     version_id: str
     coverage_rate: float = Field(ge=0, le=1)

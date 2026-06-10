@@ -5,12 +5,18 @@ from app.schemas.core import (
     DatasetVersion,
     DashboardSummary,
     DatasetSummary,
+    DynamicActor,
     EvaluationReport,
     LabelClass,
     LabelSchemaVersion,
     ModelVersion,
+    PlannerBaseline,
     PerceptionSummary,
     QCUpdateRequest,
+    RLEnvironmentVersion,
+    RLEpisodeReplay,
+    RLPolicyVersion,
+    ReplayFrame,
     RLSummary,
     Scenario,
     ScenarioMetricBreakdown,
@@ -519,6 +525,162 @@ BADCASES = [
         status="in-progress",
         linked_evaluation_report_id="eval-boundary-v1",
     ),
+]
+
+
+RL_ENVIRONMENTS = [
+    RLEnvironmentVersion(
+        id="rl-env-v2-grid",
+        map_generator="grid-irregular-lawn-v2",
+        observation_space=[
+            "local_occupancy",
+            "local_coverage",
+            "robot_heading",
+            "distance_to_boundary",
+            "remaining_coverage",
+            "simulated_lidar",
+            "ultrasonic",
+            "dynamic_actor_velocity",
+            "slope_resistance",
+        ],
+        action_space={"type": ["discrete"], "actions": ["forward", "turn_left", "turn_right", "slow_stop"]},
+        reward_config={
+            "new_coverage": 1.0,
+            "repeat_coverage": -0.2,
+            "collision": -6.0,
+            "boundary_violation": -6.0,
+            "forbidden_zone": -7.0,
+            "completion": 8.0,
+        },
+        termination_rules=["collision", "boundary_violation", "forbidden_zone", "target_coverage", "max_steps"],
+        sensor_modalities=["camera", "LiDAR", "ultrasonic", "IMU/GNSS-like pose"],
+        scenario_features=[
+            "irregular boundary",
+            "forbidden zones",
+            "dynamic people/pet actors",
+            "slope resistance",
+        ],
+        simulator_adapter="SimulatorAdapter:v2-grid",
+        max_steps=160,
+    )
+]
+
+
+RL_POLICIES = [
+    RLPolicyVersion(
+        id="ppo-v2",
+        environment_version_id="rl-env-v2-grid",
+        algorithm="PPO",
+        training_config={
+            "learning_rate": 0.0003,
+            "batch_size": 256,
+            "n_steps": 2048,
+            "gamma": 0.99,
+            "gae_lambda": 0.95,
+            "total_timesteps": 600000,
+        },
+        curriculum_stage="curriculum-stage-3",
+        domain_randomization=["lighting", "grass_height", "obstacle_density", "dynamic_actor_speed", "slope"],
+        metrics={
+            "coverage_rate": 0.82,
+            "repeat_coverage_rate": 0.11,
+            "collision_rate": 0.07,
+            "unseen_success_rate": 0.68,
+            "dynamic_obstacle_response_ms": 900,
+        },
+        artifact_path="artifacts/policies/ppo-v2/policy.zip",
+        linked_evaluation_reports=["eval-unseen-014"],
+        linked_badcases=["badcase-ppo-stuck-014"],
+    )
+]
+
+
+RL_BASELINES = [
+    PlannerBaseline(
+        id="random-policy",
+        name="Random action baseline",
+        baseline_type="random",
+        environment_version_id="rl-env-v2-grid",
+        metrics={
+            "coverage_rate": 0.31,
+            "collision_rate": 0.42,
+            "repeat_coverage_rate": 0.27,
+            "success_rate": 0.08,
+        },
+        description="Uniform random discrete actions for sanity checking reward and termination behavior.",
+    ),
+    PlannerBaseline(
+        id="rule-coverage-planner",
+        name="Rule-based boustrophedon planner",
+        baseline_type="rule-based",
+        environment_version_id="rl-env-v2-grid",
+        metrics={
+            "coverage_rate": 0.74,
+            "collision_rate": 0.12,
+            "repeat_coverage_rate": 0.18,
+            "success_rate": 0.53,
+        },
+        description="Traditional row-sweep coverage planner with obstacle detours for PPO comparison.",
+    ),
+]
+
+
+RL_EPISODES = [
+    RLEpisodeReplay(
+        id="episode-v2-dynamic-014",
+        policy_version_id="ppo-v2",
+        environment_version_id="rl-env-v2-grid",
+        scenario_id="scenario-dense-dynamic-pet",
+        three_d_ready=True,
+        map={"width": 8, "height": 6, "obstacle_count": 5, "forbidden_zone_count": 1},
+        path=[[1, 1], [2, 1], [3, 1], [3, 2], [3, 3], [4, 3]],
+        dynamic_actors=[
+            DynamicActor(
+                actor_id="actor-pet-01",
+                actor_type="pet",
+                trajectory=[[5, 2], [4, 2], [3, 2], [2, 2]],
+            ),
+            DynamicActor(
+                actor_id="actor-person-01",
+                actor_type="person",
+                trajectory=[[6, 4], [5, 4], [4, 4]],
+            ),
+        ],
+        frames=[
+            ReplayFrame(
+                step=0,
+                robot_position=[1, 1],
+                action="forward",
+                reward=1.0,
+                covered_cells=2,
+                lidar=[3.0, 4.0, 4.0, 2.0, 1.0, 1.0, 1.0, 4.0],
+                ultrasonic=[1.0, 3.0, 4.0, 1.0],
+                event="new-coverage",
+            ),
+            ReplayFrame(
+                step=1,
+                robot_position=[2, 1],
+                action="forward",
+                reward=1.0,
+                covered_cells=3,
+                lidar=[2.0, 3.0, 3.0, 2.0, 2.0, 1.0, 1.0, 5.0],
+                ultrasonic=[1.0, 2.0, 3.0, 2.0],
+                event="dynamic-actor-near",
+            ),
+            ReplayFrame(
+                step=2,
+                robot_position=[3, 1],
+                action="turn_right",
+                reward=-0.01,
+                covered_cells=3,
+                lidar=[1.0, 2.0, 3.0, 3.0, 3.0, 1.0, 1.0, 4.0],
+                ultrasonic=[1.0, 1.0, 3.0, 3.0],
+                event="near-miss",
+            ),
+        ],
+        event_markers=["dynamic-actor-near", "near-miss", "repeat-coverage-risk"],
+        timeline_reference="artifacts/policies/ppo-v2/replays/episode-v2-dynamic-014.timeline.json",
+    )
 ]
 
 

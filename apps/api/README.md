@@ -34,4 +34,8 @@ Current scope:
 - evaluation report records at `/api/evaluations`
 - evaluation report detail records at `/api/evaluations/{report_id}`
 - Badcase records and creation workflow at `/api/badcases`
+- RL environment records at `/api/rl/environments`
+- RL policy records at `/api/rl/policies`
+- RL baseline records at `/api/rl/baselines`
+- RL episode replay records at `/api/rl/episodes/{episode_id}`
 - V3 backlog seed records

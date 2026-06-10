@@ -10,7 +10,11 @@ from app.schemas.core import (
     EvaluationReport,
     LabelSchemaVersion,
     ModelVersion,
+    PlannerBaseline,
     QCUpdateRequest,
+    RLEnvironmentVersion,
+    RLEpisodeReplay,
+    RLPolicyVersion,
     Scenario,
     ScenarioCoverage,
     TrainingRun,
@@ -37,6 +41,14 @@ from app.services.perception import (
     list_evaluation_reports,
     list_model_versions,
     list_training_runs,
+)
+from app.services.rl_training import (
+    get_rl_environment_or_none,
+    get_rl_episode_or_none,
+    get_rl_policy_or_none,
+    list_rl_baselines,
+    list_rl_environments,
+    list_rl_policies,
 )
 from app.services.seed_data import SCENARIOS, V3_BACKLOG
 
@@ -164,6 +176,45 @@ def create_badcase(request: BadcaseCreateRequest) -> BadcaseRecord:
         return create_perception_badcase(request)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/api/rl/environments", response_model=list[RLEnvironmentVersion])
+def rl_environments() -> list[RLEnvironmentVersion]:
+    return list_rl_environments()
+
+
+@app.get("/api/rl/environments/{environment_id}", response_model=RLEnvironmentVersion)
+def rl_environment_detail(environment_id: str) -> RLEnvironmentVersion:
+    environment = get_rl_environment_or_none(environment_id)
+    if environment is None:
+        raise HTTPException(status_code=404, detail="RL environment not found")
+    return environment
+
+
+@app.get("/api/rl/policies", response_model=list[RLPolicyVersion])
+def rl_policies() -> list[RLPolicyVersion]:
+    return list_rl_policies()
+
+
+@app.get("/api/rl/policies/{policy_id}", response_model=RLPolicyVersion)
+def rl_policy_detail(policy_id: str) -> RLPolicyVersion:
+    policy = get_rl_policy_or_none(policy_id)
+    if policy is None:
+        raise HTTPException(status_code=404, detail="RL policy not found")
+    return policy
+
+
+@app.get("/api/rl/baselines", response_model=list[PlannerBaseline])
+def rl_baselines() -> list[PlannerBaseline]:
+    return list_rl_baselines()
+
+
+@app.get("/api/rl/episodes/{episode_id}", response_model=RLEpisodeReplay)
+def rl_episode_detail(episode_id: str) -> RLEpisodeReplay:
+    episode = get_rl_episode_or_none(episode_id)
+    if episode is None:
+        raise HTTPException(status_code=404, detail="RL episode not found")
+    return episode
 
 
 @app.get("/api/backlog/v3", response_model=list[V3BacklogItem])

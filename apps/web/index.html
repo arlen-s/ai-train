@@ -180,6 +180,17 @@
         <li>Badcase 可从 model version 创建，root cause 会映射为 rebalance dataset、relabel、hard-negative 或 promotion guardrail 动作。</li>
       </ul>
     </section>
+
+    <section class="panel" aria-label="RL 训练与回放">
+      <h2>RL 训练与回放</h2>
+      <p>RL API：<code>/api/rl/environments</code>、<code>/api/rl/policies</code>、<code>/api/rl/baselines</code>、<code>/api/rl/episodes/{episode_id}</code>。</p>
+      <ul>
+        <li>rl-env-v2-grid 定义 2D mowing map、discrete actions、reward config、termination rules 和 SimulatorAdapter:v2-grid。</li>
+        <li>ppo-v2 记录 PPO learning rate、batch、n_steps、curriculum-stage-3、domain randomization 和 policy artifact。</li>
+        <li>baseline 包含 random-policy 与 rule-coverage-planner，用于 coverage rate、collision rate、repeat coverage rate 对比。</li>
+        <li>episode-v2-dynamic-014 包含动态 pet/person actors、LiDAR、ultrasonic、near-miss markers 和 3D-ready timeline。</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>
