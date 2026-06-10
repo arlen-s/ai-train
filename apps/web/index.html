@@ -202,6 +202,16 @@
         <li>simulator limitation 会生成 V3 escalation，推荐 ROS 2 / Gazebo / Isaac Sim 与真实 sensor logs 验证。</li>
       </ul>
     </section>
+
+    <section class="panel" aria-label="报告导出">
+      <h2>报告导出</h2>
+      <p>报告 API：<code>/api/reports/project-summary</code>、<code>/api/reports/export</code>。</p>
+      <ul>
+        <li>结构化报告覆盖 JD Mapping、Data Coverage、Annotation QC、Perception Results、RL Generalization、Badcase Loop、Limitations、V3 Plan。</li>
+        <li>Markdown export 输出 portfolio-ready 项目总结，并保留 dataset、model、policy、evaluation 等 source versions。</li>
+        <li>报告包含验证命令，便于下一位 AI agent 或面试复盘时确认交付状态。</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>

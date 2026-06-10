@@ -21,6 +21,9 @@ from app.schemas.core import (
     RLEvaluationReport,
     RLEpisodeReplay,
     RLPolicyVersion,
+    ProjectSummaryReport,
+    ReportExportRequest,
+    ReportExportResult,
     Scenario,
     ScenarioCoverage,
     TrainingRun,
@@ -66,6 +69,7 @@ from app.services.rl_training import (
     list_rl_environments,
     list_rl_policies,
 )
+from app.services.reports import build_project_summary_report, export_project_summary_report
 from app.services.seed_data import SCENARIOS, V3_BACKLOG
 
 app = FastAPI(
@@ -270,6 +274,16 @@ def rl_evaluation_detail(report_id: str) -> RLEvaluationReport:
 @app.get("/api/policy-comparisons", response_model=list[PolicyComparison])
 def policy_comparisons() -> list[PolicyComparison]:
     return list_policy_comparisons()
+
+
+@app.get("/api/reports/project-summary", response_model=ProjectSummaryReport)
+def project_summary_report() -> ProjectSummaryReport:
+    return build_project_summary_report()
+
+
+@app.post("/api/reports/export", response_model=ReportExportResult)
+def export_report(request: ReportExportRequest) -> ReportExportResult:
+    return export_project_summary_report(request)
 
 
 @app.get("/api/rl/episodes/{episode_id}", response_model=RLEpisodeReplay)

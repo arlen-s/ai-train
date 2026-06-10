@@ -123,3 +123,9 @@ The Phase 5 vertical slice adds a deterministic 2D mowing RL environment in `pac
 The Phase 6 vertical slice adds split-level RL generalization evaluation records, policy comparison records, and Badcase closed-loop actions. `apps/api/app/services/generalization.py` owns RL evaluation and comparison lookups.
 
 `apps/api/app/services/badcases.py` owns Badcase filtering, detail lookup, owner/status updates, and recommendation generation. Simulator limitations can now produce a V3 escalation recommendation while data, annotation, model, and reward issues stay inside the V2 iteration loop.
+
+## Phase 7 Implementation Note
+
+The Phase 7 vertical slice adds structured project summary and Markdown report export APIs. `apps/api/app/services/reports.py` assembles deterministic report content from existing V2 source versions, including JD mapping, data coverage, annotation QC, perception results, RL generalization, Badcase loop, limitations, V3 plan, and verification commands.
+
+The report API returns content for portfolio delivery without introducing PDF, Word, cloud storage, or document rendering dependencies.

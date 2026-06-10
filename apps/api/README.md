@@ -41,4 +41,6 @@ Current scope:
 - RL split-level evaluation records at `/api/rl/evaluations`
 - policy comparison records at `/api/policy-comparisons`
 - Badcase detail, filtering, status update, and recommendation workflow at `/api/badcases`
+- structured project summary report at `/api/reports/project-summary`
+- Markdown report export at `/api/reports/export`
 - V3 backlog seed records

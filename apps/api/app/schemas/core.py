@@ -298,6 +298,27 @@ class BadcaseRecommendation(BaseModel):
     priority: Literal["P0", "P1", "P2"]
 
 
+class ProjectSummaryReport(BaseModel):
+    id: str
+    format: Literal["structured"]
+    title: str
+    source_versions: Dict[str, str]
+    sections: Dict[str, str]
+    verification_commands: List[str]
+
+
+class ReportExportRequest(BaseModel):
+    format: Literal["markdown"]
+
+
+class ReportExportResult(BaseModel):
+    id: str
+    format: Literal["markdown"]
+    artifact_path: str
+    content: str
+    source_versions: Dict[str, str]
+
+
 class DatasetSummary(BaseModel):
     version_id: str
     coverage_rate: float = Field(ge=0, le=1)
