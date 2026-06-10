@@ -169,6 +169,17 @@
         <li>ann-boundary-009 关联 badcase-shadow-boundary-001，用于边界 mask 复核和 Badcase 回归。</li>
       </ul>
     </section>
+
+    <section class="panel" aria-label="感知训练与评估">
+      <h2>感知训练与评估</h2>
+      <p>感知 API：<code>/api/training-runs</code>、<code>/api/models</code>、<code>/api/evaluations</code>、<code>/api/badcases</code>。</p>
+      <ul>
+        <li>det-yolo-v2 绑定 dataset-v2，记录 learning rate、batch、epochs、mAP、recall、ONNX 和 latency 38ms。</li>
+        <li>seg-boundary-v1 记录 mean IoU、boundary IoU、forbidden-zone IoU、boundary deviation 和阴影边界弱点。</li>
+        <li>eval-perception-v2 按 validation / unseen split 展示 scenario-dense-dynamic-pet 的 small-object recall weak。</li>
+        <li>Badcase 可从 model version 创建，root cause 会映射为 rebalance dataset、relabel、hard-negative 或 promotion guardrail 动作。</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>

@@ -105,3 +105,9 @@ The web shell now exposes scenario governance and Dataset version governance sec
 The Phase 3 vertical slice adds label schema and annotation QC workflow APIs. `apps/api/app/services/annotation.py` owns current label schema retrieval, annotation task lookup, and QC update validation.
 
 The seed label schema covers LabelImg, LabelMe, CVAT, detection classes, segmentation classes, QC issue categories, and a V3-ready point-cloud label reservation. QC updates validate issue categories before mutating the in-memory task state.
+
+## Phase 4 Implementation Note
+
+The Phase 4 vertical slice adds perception training run, Model version, evaluation report, and perception Badcase APIs. `apps/api/app/services/perception.py` owns metadata lookup, source validation, Badcase creation, and root-cause-to-action recommendation mapping.
+
+`packages/evaluation` now owns controlled metric helpers for precision, recall, F1, and binary-mask IoU so future training scripts and report generation can reuse metric logic outside FastAPI. The API still records training and evaluation metadata only; heavy perception training remains outside the request path.

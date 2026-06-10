@@ -104,6 +104,89 @@ class QCUpdateRequest(BaseModel):
     reviewer_notes: str
 
 
+class TrainingRun(BaseModel):
+    id: str
+    dataset_version_id: str
+    task: Literal["obstacle-detection", "boundary-segmentation"]
+    model_family: str
+    config: Dict[str, str]
+    hyperparameters: Dict[str, float]
+    final_metrics: Dict[str, float]
+    status: Literal["queued", "running", "completed", "failed"]
+    artifact_path: str
+    onnx_export_status: Literal["not-started", "ready", "failed"]
+    latency_ms: int = Field(ge=0)
+    linked_model_version_id: str
+    linked_evaluation_reports: List[str]
+    linked_badcases: List[str]
+    known_limitations: List[str]
+
+
+class ModelVersion(BaseModel):
+    id: str
+    training_run_id: str
+    dataset_version_id: str
+    task: Literal["obstacle-detection", "boundary-segmentation"]
+    model_family: str
+    metrics: Dict[str, float]
+    artifact_path: str
+    onnx_path: Optional[str] = None
+    latency_ms: int = Field(ge=0)
+    model_size_mb: float = Field(ge=0)
+    promotion_status: Literal["baseline", "candidate", "promoted", "blocked"]
+    linked_evaluation_reports: List[str]
+    linked_badcases: List[str]
+    known_limitations: List[str]
+
+
+class ScenarioMetricBreakdown(BaseModel):
+    scenario_id: str
+    split: Literal["train", "validation", "unseen"]
+    sample_count: int = Field(ge=0)
+    metrics: Dict[str, float]
+    weak_signals: List[str]
+
+
+class EvaluationReport(BaseModel):
+    id: str
+    target_type: Literal["perception-model", "rl-policy"]
+    target_version_id: str
+    dataset_version_id: str
+    task: str
+    split: Literal["train", "validation", "unseen", "mixed"]
+    metrics: Dict[str, float]
+    scenario_breakdown: List[ScenarioMetricBreakdown]
+    linked_badcases: List[str]
+    recommendations: List[str]
+
+
+class BadcaseRecord(BaseModel):
+    id: str
+    source_type: Literal["perception", "rl", "annotation", "dataset"]
+    source_version_id: str
+    category: str
+    severity: Literal["low", "medium", "high", "critical"]
+    scenario_tags: List[str]
+    root_cause: str
+    evidence_reference: str
+    recommended_action: str
+    owner: str
+    status: Literal["open", "in-progress", "resolved", "deferred"]
+    linked_evaluation_report_id: Optional[str] = None
+
+
+class BadcaseCreateRequest(BaseModel):
+    source_type: Literal["perception", "rl", "annotation", "dataset"]
+    source_version_id: str
+    category: str
+    severity: Literal["low", "medium", "high", "critical"]
+    scenario_tags: List[str]
+    root_cause: str
+    evidence_reference: str
+    owner: str
+    linked_evaluation_report_id: Optional[str] = None
+
+
 class DatasetSummary(BaseModel):
     version_id: str
     coverage_rate: float = Field(ge=0, le=1)

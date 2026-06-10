@@ -2,13 +2,18 @@ from fastapi import FastAPI, HTTPException
 
 from app.schemas.core import (
     AnnotationTask,
+    BadcaseCreateRequest,
+    BadcaseRecord,
     DashboardSummary,
     DatasetCoverage,
     DatasetVersion,
+    EvaluationReport,
     LabelSchemaVersion,
+    ModelVersion,
     QCUpdateRequest,
     Scenario,
     ScenarioCoverage,
+    TrainingRun,
     V3BacklogItem,
 )
 from app.services.annotation import (
@@ -23,6 +28,15 @@ from app.services.governance import (
     get_dataset_or_none,
     list_datasets,
     list_scenario_coverage,
+)
+from app.services.perception import (
+    create_perception_badcase,
+    get_evaluation_report_or_none,
+    get_training_run_or_none,
+    list_badcases,
+    list_evaluation_reports,
+    list_model_versions,
+    list_training_runs,
 )
 from app.services.seed_data import SCENARIOS, V3_BACKLOG
 
@@ -106,6 +120,50 @@ def update_annotation_task_qc_route(task_id: str, request: QCUpdateRequest) -> A
     if task is None:
         raise HTTPException(status_code=404, detail="Annotation task not found")
     return task
+
+
+@app.get("/api/training-runs", response_model=list[TrainingRun])
+def training_runs() -> list[TrainingRun]:
+    return list_training_runs()
+
+
+@app.get("/api/training-runs/{run_id}", response_model=TrainingRun)
+def training_run_detail(run_id: str) -> TrainingRun:
+    run = get_training_run_or_none(run_id)
+    if run is None:
+        raise HTTPException(status_code=404, detail="Training run not found")
+    return run
+
+
+@app.get("/api/models", response_model=list[ModelVersion])
+def model_versions() -> list[ModelVersion]:
+    return list_model_versions()
+
+
+@app.get("/api/evaluations", response_model=list[EvaluationReport])
+def evaluation_reports() -> list[EvaluationReport]:
+    return list_evaluation_reports()
+
+
+@app.get("/api/evaluations/{report_id}", response_model=EvaluationReport)
+def evaluation_report_detail(report_id: str) -> EvaluationReport:
+    report = get_evaluation_report_or_none(report_id)
+    if report is None:
+        raise HTTPException(status_code=404, detail="Evaluation report not found")
+    return report
+
+
+@app.get("/api/badcases", response_model=list[BadcaseRecord])
+def badcase_records() -> list[BadcaseRecord]:
+    return list_badcases()
+
+
+@app.post("/api/badcases", response_model=BadcaseRecord)
+def create_badcase(request: BadcaseCreateRequest) -> BadcaseRecord:
+    try:
+        return create_perception_badcase(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @app.get("/api/backlog/v3", response_model=list[V3BacklogItem])
