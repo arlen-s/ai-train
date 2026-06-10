@@ -1,5 +1,6 @@
 from app.schemas.core import (
     BadcaseSummary,
+    DatasetVersion,
     DashboardSummary,
     DatasetSummary,
     PerceptionSummary,
@@ -60,6 +61,51 @@ SCENARIOS = [
         risk_level="high",
         sensor_modalities=["camera", "lidar", "ultrasonic", "trajectory"],
         dynamic_obstacle_pattern="person-pet-crossing",
+    ),
+]
+
+
+DATASETS = [
+    DatasetVersion(
+        id="dataset-v1",
+        name="baseline mower perception dataset",
+        sample_count=2400,
+        source="现场外采 + 合成增强",
+        scenario_distribution={
+            "scenario-dry-flat-clear": 410,
+            "scenario-wet-slope-shadow": 42,
+            "scenario-dense-dynamic-pet": 8,
+        },
+        annotation_schema_version="label-schema-v1",
+        qc_status="baseline QC completed",
+        quality_score=0.78,
+        sensor_modalities=["camera"],
+        immutable_after_training=True,
+        linked_training_runs=["det-yolo-v1"],
+        linked_evaluation_reports=["eval-perception-v1"],
+        linked_badcases=["badcase-small-stone-001"],
+        known_limitations=["强光样本不足", "动态障碍样本不足", "无模拟 LiDAR"],
+    ),
+    DatasetVersion(
+        id="dataset-v2",
+        name="v2 sensor-aware closed-loop dataset",
+        sample_count=3180,
+        source="现场外采 + 机端回传 + 仿真生成",
+        scenario_distribution={
+            "scenario-dry-flat-clear": 410,
+            "scenario-wet-slope-shadow": 68,
+            "scenario-dense-dynamic-pet": 22,
+        },
+        annotation_schema_version="label-schema-v2",
+        qc_status="QC 通过，12 条待复核",
+        quality_score=0.86,
+        sensor_modalities=["camera", "lidar", "ultrasonic", "imu", "gnss", "trajectory"],
+        immutable_after_training=True,
+        linked_training_runs=["det-yolo-v2", "seg-boundary-v1"],
+        linked_evaluation_reports=["eval-unseen-014", "eval-perception-v2"],
+        linked_badcases=["badcase-shadow-boundary-001", "badcase-ppo-stuck-014"],
+        known_limitations=["雨天样本仍偏少", "密集动态障碍覆盖不足", "真实 rosbag/MCAP 日志待 V3 接入"],
+        v3_real_log_sources=["rosbag", "MCAP", "fleet-upload"],
     ),
 ]
 

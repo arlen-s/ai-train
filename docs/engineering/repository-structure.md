@@ -93,3 +93,9 @@ Do not start perception or RL training implementation until the skeleton and met
 The current Phase 1 skeleton uses FastAPI, Pydantic schemas, deterministic seed data, and standard-library `unittest` smoke tests. The environment does not currently include SQLAlchemy or pytest, so database persistence and pytest migration are deferred until dependency setup.
 
 The static web shell at `apps/web/index.html` is intentionally lightweight. It preserves the Chinese-first V2 training workbench direction while the backend metadata model stabilizes.
+
+## Phase 2 Implementation Note
+
+The Phase 2 vertical slice adds scenario coverage and Dataset version governance APIs while still using deterministic seed data. `apps/api/app/services/governance.py` owns coverage classification and Dataset lookup logic so future database persistence can replace seed data without changing route contracts.
+
+The web shell now exposes scenario governance and Dataset version governance sections in Chinese, including V2 simulated sensor fields and V3 real-log reservations for rosbag, MCAP, and fleet-upload sources.

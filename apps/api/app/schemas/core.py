@@ -22,6 +22,45 @@ class Scenario(BaseModel):
     v3_real_log_reference: Optional[str] = None
 
 
+class ScenarioCoverage(BaseModel):
+    scenario_id: str
+    scenario_name: str
+    sample_count: int = Field(ge=0)
+    required_min_count: int = Field(gt=0)
+    coverage_level: Literal["strong", "weak", "gap"]
+    risk_level: Literal["low", "medium", "high"]
+    recommended_action: str
+    sensor_modalities: List[str]
+    dynamic_obstacle_pattern: str
+
+
+class DatasetVersion(BaseModel):
+    id: str
+    name: str
+    sample_count: int = Field(ge=0)
+    source: str
+    scenario_distribution: Dict[str, int]
+    annotation_schema_version: str
+    qc_status: str
+    quality_score: float = Field(ge=0, le=1)
+    sensor_modalities: List[str]
+    immutable_after_training: bool
+    linked_training_runs: List[str]
+    linked_evaluation_reports: List[str]
+    linked_badcases: List[str]
+    known_limitations: List[str]
+    v3_real_log_sources: List[str] = Field(default_factory=list)
+
+
+class DatasetCoverage(BaseModel):
+    dataset_id: str
+    coverage_by_scenario: Dict[str, int]
+    weak_scenarios: List[str]
+    gap_scenarios: List[str]
+    sensor_modalities: List[str]
+    v3_reserved_sources: List[str]
+
+
 class DatasetSummary(BaseModel):
     version_id: str
     coverage_rate: float = Field(ge=0, le=1)

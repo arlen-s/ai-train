@@ -137,6 +137,26 @@
         <li>Badcase 决策：根因、推荐动作、V3 backlog。</li>
       </ol>
     </section>
+
+    <section class="panel" aria-label="场景治理">
+      <h2>场景治理</h2>
+      <p>场景覆盖 API：<code>/api/scenarios/coverage</code>。当前薄弱项会按样本数、风险等级、模拟传感器和动态障碍模式生成推荐动作。</p>
+      <ul>
+        <li>强覆盖：干燥短草、平地、清晰边界，410 samples。</li>
+        <li>薄弱覆盖：湿高草、坡地、阴影，68 samples。</li>
+        <li>缺口覆盖：密集障碍物、动态宠物、不规则边界，22 samples，需要补充动态障碍仿真。</li>
+      </ul>
+    </section>
+
+    <section class="panel" aria-label="Dataset 版本治理">
+      <h2>Dataset 版本治理</h2>
+      <p>Dataset API：<code>/api/datasets</code>、<code>/api/datasets/{dataset_id}</code>、<code>/api/datasets/{dataset_id}/coverage</code>。</p>
+      <ul>
+        <li>dataset-v2 已绑定 det-yolo-v2、seg-boundary-v1、eval-unseen-014 和相关 Badcase。</li>
+        <li>V2 记录 camera、LiDAR、ultrasonic、IMU/GNSS-like pose 和 trajectory。</li>
+        <li>V3 预留 rosbag、MCAP、fleet-upload 等真实日志来源。</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>
