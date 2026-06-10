@@ -223,6 +223,16 @@
         <li>episode clusters 聚合 rl-stuck、near-miss 等重复失败，并链接 representative Badcase 和 next actions。</li>
       </ul>
     </section>
+
+    <section class="panel" aria-label="V3 promotion planning">
+      <h2>V3 promotion planning</h2>
+      <p>V3 API：<code>/api/backlog/v3</code>、<code>/api/backlog/v3/promotion-plan</code>。</p>
+      <ul>
+        <li>promotion plan 保持 V2 scope lock，ROS 2 / Gazebo / Isaac Sim、real sensor logs、edge deployment 进入 V3。</li>
+        <li>V3 backlog item 记录 source problem、target module、expected value、dependency、priority 和 status。</li>
+        <li>scope guardrails 明确 V2 是 metadata/simulation 交付，工业机器人集成不阻塞当前版本。</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>

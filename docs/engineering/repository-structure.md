@@ -135,3 +135,9 @@ The report API returns content for portfolio delivery without introducing PDF, W
 The Phase 8 vertical slice adds the remaining V2 enhancement metadata for Dataset drift, model regression guardrails, synthetic augmentation presets, and RL episode clusters. `apps/api/app/services/enhancements.py` owns these lookup workflows.
 
 These records close the loop for distribution monitoring, model promotion safety, long-tail sample expansion, and repeated RL failure grouping without adding external DVC, augmentation, or embedding-clustering dependencies.
+
+## Phase 9 Implementation Note
+
+The Phase 9 vertical slice adds V3 promotion planning and V3 backlog creation APIs. `apps/api/app/services/v3_planning.py` owns the V3 promotion plan and appends new V3 backlog records to the in-memory seed list.
+
+This phase keeps V2 scope locked while documenting industrial-track upgrades such as ROS 2 / Gazebo or Isaac Sim, real sensor logs, multi-sensor fusion, edge deployment, and fleet log replay.

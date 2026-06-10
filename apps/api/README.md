@@ -47,4 +47,6 @@ Current scope:
 - model regression guardrail records at `/api/model-guardrails/regression`
 - augmentation presets at `/api/augmentation-presets`
 - RL episode clusters at `/api/rl/episode-clusters`
+- V3 promotion plan at `/api/backlog/v3/promotion-plan`
+- V3 backlog creation at `/api/backlog/v3`
 - V3 backlog seed records

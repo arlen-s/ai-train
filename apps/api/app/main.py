@@ -31,7 +31,9 @@ from app.schemas.core import (
     Scenario,
     ScenarioCoverage,
     TrainingRun,
+    V3BacklogCreateRequest,
     V3BacklogItem,
+    V3PromotionPlan,
 )
 from app.services.annotation import (
     get_annotation_task_or_none,
@@ -81,6 +83,7 @@ from app.services.rl_training import (
 )
 from app.services.reports import build_project_summary_report, export_project_summary_report
 from app.services.seed_data import SCENARIOS, V3_BACKLOG
+from app.services.v3_planning import create_v3_backlog_item, get_v3_promotion_plan
 
 app = FastAPI(
     title="LawnBot AI V2 Workbench API",
@@ -327,3 +330,13 @@ def rl_episode_detail(episode_id: str) -> RLEpisodeReplay:
 @app.get("/api/backlog/v3", response_model=list[V3BacklogItem])
 def list_v3_backlog() -> list[V3BacklogItem]:
     return V3_BACKLOG
+
+
+@app.post("/api/backlog/v3", response_model=V3BacklogItem)
+def create_v3_backlog(request: V3BacklogCreateRequest) -> V3BacklogItem:
+    return create_v3_backlog_item(request)
+
+
+@app.get("/api/backlog/v3/promotion-plan", response_model=V3PromotionPlan)
+def v3_promotion_plan() -> V3PromotionPlan:
+    return get_v3_promotion_plan()

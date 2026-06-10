@@ -402,6 +402,27 @@ class V3BacklogItem(BaseModel):
     status: str
 
 
+class V3BacklogCreateRequest(BaseModel):
+    id: str
+    priority: Literal["P0", "P1", "P2"]
+    title: str
+    module: str
+    expected_value: str
+    dependency: str
+    version_target: Literal["V3"]
+    status: str
+
+
+class V3PromotionPlan(BaseModel):
+    id: str
+    v2_scope_lock: Literal["closed"]
+    candidate_promotions: List[str]
+    source_limitations: List[str]
+    dependencies: List[str]
+    readiness_criteria: List[str]
+    scope_guardrails: List[str]
+
+
 class DashboardSummary(BaseModel):
     product_name: str
     target_version: Literal["V2"]
