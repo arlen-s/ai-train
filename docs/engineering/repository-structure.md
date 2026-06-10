@@ -117,3 +117,9 @@ The Phase 4 vertical slice adds perception training run, Model version, evaluati
 The Phase 5 vertical slice adds a deterministic 2D mowing RL environment in `packages/rl_env`. It exposes a lightweight Gymnasium-style `reset` and `step` contract, discrete actions, coverage rewards, collision and boundary termination, simulated LiDAR, and ultrasonic observations without adding heavy training dependencies.
 
 `apps/api/app/services/rl_training.py` owns RL metadata lookup for environment versions, PPO policy versions, planner baselines, and 3D-ready replay records. The API records PPO training workflow metadata only; Stable-Baselines3 training is deferred to a future training script outside FastAPI request handling.
+
+## Phase 6 Implementation Note
+
+The Phase 6 vertical slice adds split-level RL generalization evaluation records, policy comparison records, and Badcase closed-loop actions. `apps/api/app/services/generalization.py` owns RL evaluation and comparison lookups.
+
+`apps/api/app/services/badcases.py` owns Badcase filtering, detail lookup, owner/status updates, and recommendation generation. Simulator limitations can now produce a V3 escalation recommendation while data, annotation, model, and reward issues stay inside the V2 iteration loop.

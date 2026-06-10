@@ -1,9 +1,13 @@
+from typing import Optional
+
 from fastapi import FastAPI, HTTPException
 
 from app.schemas.core import (
     AnnotationTask,
     BadcaseCreateRequest,
+    BadcaseRecommendation,
     BadcaseRecord,
+    BadcaseUpdateRequest,
     DashboardSummary,
     DatasetCoverage,
     DatasetVersion,
@@ -11,8 +15,10 @@ from app.schemas.core import (
     LabelSchemaVersion,
     ModelVersion,
     PlannerBaseline,
+    PolicyComparison,
     QCUpdateRequest,
     RLEnvironmentVersion,
+    RLEvaluationReport,
     RLEpisodeReplay,
     RLPolicyVersion,
     Scenario,
@@ -26,7 +32,18 @@ from app.services.annotation import (
     list_annotation_tasks,
     update_annotation_task_qc,
 )
+from app.services.badcases import (
+    build_badcase_recommendation_or_none,
+    get_badcase_or_none,
+    list_badcases_filtered,
+    update_badcase_or_none,
+)
 from app.services.dashboard import get_dashboard_summary
+from app.services.generalization import (
+    get_rl_evaluation_or_none,
+    list_policy_comparisons,
+    list_rl_evaluations,
+)
 from app.services.governance import (
     get_dataset_coverage_or_none,
     get_dataset_or_none,
@@ -37,7 +54,6 @@ from app.services.perception import (
     create_perception_badcase,
     get_evaluation_report_or_none,
     get_training_run_or_none,
-    list_badcases,
     list_evaluation_reports,
     list_model_versions,
     list_training_runs,
@@ -166,8 +182,13 @@ def evaluation_report_detail(report_id: str) -> EvaluationReport:
 
 
 @app.get("/api/badcases", response_model=list[BadcaseRecord])
-def badcase_records() -> list[BadcaseRecord]:
-    return list_badcases()
+def badcase_records(
+    source_type: Optional[str] = None,
+    category: Optional[str] = None,
+    severity: Optional[str] = None,
+    scenario_tag: Optional[str] = None,
+) -> list[BadcaseRecord]:
+    return list_badcases_filtered(source_type, category, severity, scenario_tag)
 
 
 @app.post("/api/badcases", response_model=BadcaseRecord)
@@ -176,6 +197,30 @@ def create_badcase(request: BadcaseCreateRequest) -> BadcaseRecord:
         return create_perception_badcase(request)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/api/badcases/{badcase_id}", response_model=BadcaseRecord)
+def badcase_detail(badcase_id: str) -> BadcaseRecord:
+    badcase = get_badcase_or_none(badcase_id)
+    if badcase is None:
+        raise HTTPException(status_code=404, detail="Badcase not found")
+    return badcase
+
+
+@app.patch("/api/badcases/{badcase_id}", response_model=BadcaseRecord)
+def update_badcase(badcase_id: str, request: BadcaseUpdateRequest) -> BadcaseRecord:
+    badcase = update_badcase_or_none(badcase_id, request)
+    if badcase is None:
+        raise HTTPException(status_code=404, detail="Badcase not found")
+    return badcase
+
+
+@app.post("/api/badcases/{badcase_id}/recommendation", response_model=BadcaseRecommendation)
+def badcase_recommendation(badcase_id: str) -> BadcaseRecommendation:
+    recommendation = build_badcase_recommendation_or_none(badcase_id)
+    if recommendation is None:
+        raise HTTPException(status_code=404, detail="Badcase not found")
+    return recommendation
 
 
 @app.get("/api/rl/environments", response_model=list[RLEnvironmentVersion])
@@ -207,6 +252,24 @@ def rl_policy_detail(policy_id: str) -> RLPolicyVersion:
 @app.get("/api/rl/baselines", response_model=list[PlannerBaseline])
 def rl_baselines() -> list[PlannerBaseline]:
     return list_rl_baselines()
+
+
+@app.get("/api/rl/evaluations", response_model=list[RLEvaluationReport])
+def rl_evaluations() -> list[RLEvaluationReport]:
+    return list_rl_evaluations()
+
+
+@app.get("/api/rl/evaluations/{report_id}", response_model=RLEvaluationReport)
+def rl_evaluation_detail(report_id: str) -> RLEvaluationReport:
+    report = get_rl_evaluation_or_none(report_id)
+    if report is None:
+        raise HTTPException(status_code=404, detail="RL evaluation not found")
+    return report
+
+
+@app.get("/api/policy-comparisons", response_model=list[PolicyComparison])
+def policy_comparisons() -> list[PolicyComparison]:
+    return list_policy_comparisons()
 
 
 @app.get("/api/rl/episodes/{episode_id}", response_model=RLEpisodeReplay)

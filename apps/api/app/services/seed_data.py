@@ -11,13 +11,17 @@ from app.schemas.core import (
     LabelSchemaVersion,
     ModelVersion,
     PlannerBaseline,
+    PolicyComparison,
+    PolicyComparisonEntry,
     PerceptionSummary,
     QCUpdateRequest,
     RLEnvironmentVersion,
+    RLEvaluationReport,
     RLEpisodeReplay,
     RLPolicyVersion,
     ReplayFrame,
     RLSummary,
+    RLSplitMetric,
     Scenario,
     ScenarioMetricBreakdown,
     TrainingRun,
@@ -525,6 +529,34 @@ BADCASES = [
         status="in-progress",
         linked_evaluation_report_id="eval-boundary-v1",
     ),
+    BadcaseRecord(
+        id="badcase-ppo-stuck-014",
+        source_type="rl",
+        source_version_id="ppo-v2",
+        category="rl-stuck",
+        severity="high",
+        scenario_tags=["narrow-passage", "unseen", "dense-obstacle"],
+        root_cause="reward misspecification",
+        evidence_reference="artifacts/policies/ppo-v2/replays/episode-v2-dynamic-014.timeline.json",
+        recommended_action="adjust reward config for local loop penalties and retrain PPO with narrow-passage curriculum",
+        owner="rl-engineer",
+        status="open",
+        linked_evaluation_report_id="eval-unseen-014",
+    ),
+    BadcaseRecord(
+        id="badcase-sim-gap-001",
+        source_type="rl",
+        source_version_id="ppo-v2",
+        category="simulator-limitation",
+        severity="medium",
+        scenario_tags=["sim-to-real", "dynamic-obstacle", "sensor-gap"],
+        root_cause="simulator limitation",
+        evidence_reference="artifacts/policies/ppo-v2/replays/sim-gap-001.timeline.json",
+        recommended_action="create V3 simulator backlog for ROS 2 / Gazebo or Isaac Sim validation with real sensor logs",
+        owner="platform-engineer",
+        status="open",
+        linked_evaluation_report_id="eval-unseen-014",
+    ),
 ]
 
 
@@ -680,6 +712,84 @@ RL_EPISODES = [
         ],
         event_markers=["dynamic-actor-near", "near-miss", "repeat-coverage-risk"],
         timeline_reference="artifacts/policies/ppo-v2/replays/episode-v2-dynamic-014.timeline.json",
+    )
+]
+
+
+RL_EVALUATIONS = [
+    RLEvaluationReport(
+        id="eval-unseen-014",
+        policy_version_id="ppo-v2",
+        environment_version_id="rl-env-v2-grid",
+        scenario_set="train-validation-unseen-v2",
+        metrics={
+            "coverage_rate": 0.82,
+            "repeat_coverage_rate": 0.11,
+            "collision_count": 7,
+            "boundary_violation_count": 4,
+            "completion_time_s": 148.0,
+            "path_length_m": 96.4,
+            "stuck_rate": 0.09,
+            "success_rate": 0.68,
+            "dynamic_obstacle_response_ms": 900,
+            "sensor_near_miss_count": 5,
+        },
+        split_metrics=[
+            RLSplitMetric(
+                split="train",
+                scenario_count=64,
+                metrics={"success_rate": 0.84, "coverage_rate": 0.88, "collision_rate": 0.03},
+                weak_scenario_tags=[],
+            ),
+            RLSplitMetric(
+                split="validation",
+                scenario_count=32,
+                metrics={"success_rate": 0.74, "coverage_rate": 0.83, "collision_rate": 0.06},
+                weak_scenario_tags=["dense-obstacle"],
+            ),
+            RLSplitMetric(
+                split="unseen",
+                scenario_count=28,
+                metrics={"success_rate": 0.68, "coverage_rate": 0.78, "collision_rate": 0.1},
+                weak_scenario_tags=["narrow-passage", "dynamic-pet", "irregular-boundary"],
+            ),
+        ],
+        linked_badcases=["badcase-ppo-stuck-014", "badcase-sim-gap-001"],
+        recommendations=[
+            "增加 narrow-passage curriculum",
+            "对 dynamic-pet unseen split 加入 regression guardrail",
+            "将真实传感器仿真差距升级到 V3 simulator backlog",
+        ],
+    )
+]
+
+
+POLICY_COMPARISONS = [
+    PolicyComparison(
+        id="policy-comparison-v2",
+        environment_version_id="rl-env-v2-grid",
+        entries=[
+            PolicyComparisonEntry(
+                policy_or_baseline_id="random-policy",
+                kind="random",
+                metrics={"coverage_rate": 0.31, "success_rate": 0.08, "collision_rate": 0.42},
+            ),
+            PolicyComparisonEntry(
+                policy_or_baseline_id="rule-coverage-planner",
+                kind="rule-based",
+                metrics={"coverage_rate": 0.74, "success_rate": 0.53, "collision_rate": 0.12},
+            ),
+            PolicyComparisonEntry(
+                policy_or_baseline_id="ppo-v2",
+                kind="PPO",
+                metrics={"coverage_rate": 0.82, "success_rate": 0.68, "collision_rate": 0.07},
+            ),
+        ],
+        recommended_policy_id="ppo-v2",
+        guardrail_notes=[
+            "ppo-v2 coverage 优于 rule baseline",
+            "unseen narrow-passage success rate 仍需 guardrail",
+        ],
     )
 ]
 

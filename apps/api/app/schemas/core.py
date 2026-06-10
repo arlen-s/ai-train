@@ -253,6 +253,51 @@ class RLEpisodeReplay(BaseModel):
     timeline_reference: str
 
 
+class RLSplitMetric(BaseModel):
+    split: Literal["train", "validation", "unseen"]
+    scenario_count: int = Field(ge=0)
+    metrics: Dict[str, float]
+    weak_scenario_tags: List[str]
+
+
+class RLEvaluationReport(BaseModel):
+    id: str
+    policy_version_id: str
+    environment_version_id: str
+    scenario_set: str
+    metrics: Dict[str, float]
+    split_metrics: List[RLSplitMetric]
+    linked_badcases: List[str]
+    recommendations: List[str]
+
+
+class PolicyComparisonEntry(BaseModel):
+    policy_or_baseline_id: str
+    kind: Literal["random", "rule-based", "PPO"]
+    metrics: Dict[str, float]
+
+
+class PolicyComparison(BaseModel):
+    id: str
+    environment_version_id: str
+    entries: List[PolicyComparisonEntry]
+    recommended_policy_id: str
+    guardrail_notes: List[str]
+
+
+class BadcaseUpdateRequest(BaseModel):
+    status: Optional[Literal["open", "in-progress", "resolved", "deferred"]] = None
+    owner: Optional[str] = None
+
+
+class BadcaseRecommendation(BaseModel):
+    badcase_id: str
+    recommended_action: str
+    create_v3_backlog_item: bool
+    target_module: str
+    priority: Literal["P0", "P1", "P2"]
+
+
 class DatasetSummary(BaseModel):
     version_id: str
     coverage_rate: float = Field(ge=0, le=1)

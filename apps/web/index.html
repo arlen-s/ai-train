@@ -191,6 +191,17 @@
         <li>episode-v2-dynamic-014 包含动态 pet/person actors、LiDAR、ultrasonic、near-miss markers 和 3D-ready timeline。</li>
       </ul>
     </section>
+
+    <section class="panel" aria-label="泛化评估与 Badcase 闭环">
+      <h2>泛化评估与 Badcase 闭环</h2>
+      <p>闭环 API：<code>/api/rl/evaluations</code>、<code>/api/policy-comparisons</code>、<code>/api/badcases?source_type=rl</code>。</p>
+      <ul>
+        <li>eval-unseen-014 按 train / validation / unseen split 展示 coverage、success、collision、dynamic obstacle response。</li>
+        <li>policy-comparison-v2 对比 random-policy、rule-coverage-planner 和 ppo-v2，保留 promotion guardrail notes。</li>
+        <li>Badcase 支持 source、category、severity、scenario tag 过滤，并可更新 owner/status。</li>
+        <li>simulator limitation 会生成 V3 escalation，推荐 ROS 2 / Gazebo / Isaac Sim 与真实 sensor logs 验证。</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>

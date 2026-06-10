@@ -38,4 +38,7 @@ Current scope:
 - RL policy records at `/api/rl/policies`
 - RL baseline records at `/api/rl/baselines`
 - RL episode replay records at `/api/rl/episodes/{episode_id}`
+- RL split-level evaluation records at `/api/rl/evaluations`
+- policy comparison records at `/api/policy-comparisons`
+- Badcase detail, filtering, status update, and recommendation workflow at `/api/badcases`
 - V3 backlog seed records
