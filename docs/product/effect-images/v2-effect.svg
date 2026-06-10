@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">LawnBot AI V2 effect image</title>
+  <desc id="desc">V2 concept dashboard showing 3D episode replay, simulated sensors, dynamic obstacles, model metrics, and Badcase loop.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7faf8"/>
+      <stop offset="0.55" stop-color="#eef6f1"/>
+      <stop offset="1" stop-color="#f4f0ff"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <linearGradient id="lawn" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b7e4bf"/>
+      <stop offset="0.5" stop-color="#77bf86"/>
+      <stop offset="1" stop-color="#4f9f68"/>
+    </linearGradient>
+    <linearGradient id="sensor" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2c6fbb" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#2c6fbb" stop-opacity="0.45"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#101828" flood-opacity="0.14"/>
+    </filter>
+    <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M 34 0 L 0 0 0 34" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.38"/>
+    </pattern>
+    <style>
+      .h1{font:800 38px Inter,Arial,sans-serif;fill:#1b2430}
+      .h2{font:800 22px Inter,Arial,sans-serif;fill:#1b2430}
+      .h3{font:700 17px Inter,Arial,sans-serif;fill:#1b2430}
+      .body{font:500 15px Inter,Arial,sans-serif;fill:#475467}
+      .small{font:650 12px Inter,Arial,sans-serif;fill:#667085}
+      .tiny{font:700 10px Inter,Arial,sans-serif;fill:#667085}
+      .metric{font:800 30px Inter,Arial,sans-serif;fill:#1b2430}
+      .white{fill:#ffffff}
+      .muted{fill:#667085}
+      .line{stroke:#d8dee4;stroke-width:1}
+      .dash{stroke-dasharray:8 8}
+      .card{fill:url(#panel);stroke:#d8dee4;stroke-width:1;filter:url(#shadow)}
+      .chipText{font:700 12px Inter,Arial,sans-serif}
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+
+  <rect x="52" y="48" width="1496" height="904" rx="28" fill="#ffffff" stroke="#d8dee4" filter="url(#shadow)"/>
+
+  <g transform="translate(92 90)">
+    <rect x="0" y="0" width="52" height="52" rx="14" fill="#2f7d4f"/>
+    <path d="M16 32c16 0 15-16 30-16-2 16-14 25-30 25Z" fill="#e7fff0"/>
+    <text x="72" y="25" class="h1">V2 LawnBot AI Console</text>
+    <text x="72" y="50" class="body">3D episode replay, simulated sensors, dynamic obstacles, ONNX readiness, and Badcase-driven iteration.</text>
+    <g transform="translate(1115 4)">
+      <rect x="0" y="0" width="116" height="32" rx="16" fill="#ecfdf3" stroke="#a6d9bd"/>
+      <text x="58" y="21" text-anchor="middle" class="chipText" fill="#2f7d4f">V2 TARGET</text>
+      <rect x="130" y="0" width="150" height="32" rx="16" fill="#eff8ff" stroke="#b5d2f2"/>
+      <text x="205" y="21" text-anchor="middle" class="chipText" fill="#2c6fbb">14-18 WEEKS</text>
+    </g>
+  </g>
+
+  <g transform="translate(92 175)">
+    <rect class="card" x="0" y="0" width="955" height="584" rx="22"/>
+    <text x="28" y="42" class="h2">3D Episode Replay</text>
+    <text x="28" y="66" class="body">Three.js-style replay for RL policy review and PM communication.</text>
+
+    <g transform="translate(58 104)">
+      <polygon points="400,40 820,236 402,456 -24,234" fill="#d2e9d5" stroke="#c0d8c7" stroke-width="2"/>
+      <polygon points="400,76 746,236 400,420 48,236" fill="url(#lawn)" stroke="#4f9f68" stroke-width="2"/>
+      <polygon points="400,76 746,236 400,420 48,236" fill="url(#grid)" opacity="0.72"/>
+
+      <path d="M132 228 C214 176 304 162 392 184 C510 214 570 276 688 238" fill="none" stroke="#2c6fbb" stroke-width="12" stroke-linecap="round" opacity="0.72"/>
+      <path d="M132 260 C244 314 352 338 466 320 C560 306 626 282 692 314" fill="none" stroke="#6941c6" stroke-width="10" stroke-linecap="round" opacity="0.55"/>
+      <path d="M210 210 C314 230 438 250 604 252" fill="none" stroke="#b7791f" stroke-width="20" stroke-linecap="round" opacity="0.18"/>
+
+      <g transform="translate(470 230)">
+        <polygon points="0,-28 58,0 0,28 -58,0" fill="#111827" stroke="#ffffff" stroke-width="5"/>
+        <polygon points="-22,-8 0,-18 22,-8 0,2" fill="#4ade80"/>
+        <circle cx="-42" cy="14" r="8" fill="#111827" stroke="#ffffff" stroke-width="3"/>
+        <circle cx="42" cy="14" r="8" fill="#111827" stroke="#ffffff" stroke-width="3"/>
+      </g>
+
+      <g opacity="0.74">
+        <path d="M470 230 L312 126" fill="none" stroke="#2c6fbb" stroke-width="2"/>
+        <path d="M470 230 L330 342" fill="none" stroke="#2c6fbb" stroke-width="2"/>
+        <path d="M470 230 L652 160" fill="none" stroke="#2c6fbb" stroke-width="2"/>
+        <path d="M470 230 L666 312" fill="none" stroke="#2c6fbb" stroke-width="2"/>
+        <path d="M470 230 L470 96" fill="none" stroke="#2c6fbb" stroke-width="2"/>
+      </g>
+
+      <g transform="translate(266 214)">
+        <polygon points="0,-38 44,-14 44,28 0,54 -44,28 -44,-14" fill="#6b7280" stroke="#ffffff" stroke-width="5"/>
+        <text x="0" y="5" text-anchor="middle" class="tiny" fill="#fff">TREE</text>
+      </g>
+      <g transform="translate(640 282)">
+        <polygon points="0,-30 36,-10 36,24 0,42 -36,24 -36,-10" fill="#92400e" stroke="#ffffff" stroke-width="5"/>
+        <text x="0" y="5" text-anchor="middle" class="tiny" fill="#fff">PET</text>
+      </g>
+      <g transform="translate(572 162)">
+        <circle cx="0" cy="0" r="30" fill="#b42318" stroke="#ffffff" stroke-width="5"/>
+        <text x="0" y="5" text-anchor="middle" class="tiny" fill="#fff">HUMAN</text>
+      </g>
+
+      <g transform="translate(32 454)">
+        <rect x="0" y="0" width="812" height="54" rx="16" fill="#ffffff" stroke="#d8dee4"/>
+        <text x="22" y="23" class="small">Replay overlays</text>
+        <circle cx="158" cy="19" r="6" fill="#2c6fbb"/><text x="171" y="24" class="small">policy path</text>
+        <circle cx="280" cy="19" r="6" fill="#6941c6"/><text x="293" y="24" class="small">baseline path</text>
+        <circle cx="414" cy="19" r="6" fill="#b7791f"/><text x="427" y="24" class="small">repeat coverage</text>
+        <circle cx="570" cy="19" r="6" fill="#b42318"/><text x="583" y="24" class="small">dynamic obstacle</text>
+        <text x="22" y="43" class="tiny">Episode: unseen-dense-obstacle-042 | Policy: ppo-v2 | Sensors: simulated LiDAR + ultrasonic</text>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(1080 175)">
+    <rect class="card" x="0" y="0" width="420" height="180" rx="22"/>
+    <text x="26" y="40" class="h2">V2 Additions</text>
+    <g transform="translate(26 64)">
+      <rect x="0" y="0" width="164" height="34" rx="17" fill="#eff8ff" stroke="#b5d2f2"/>
+      <text x="82" y="22" text-anchor="middle" class="chipText" fill="#2c6fbb">Simulated LiDAR</text>
+      <rect x="178" y="0" width="176" height="34" rx="17" fill="#f4f0ff" stroke="#d8c8fb"/>
+      <text x="266" y="22" text-anchor="middle" class="chipText" fill="#6941c6">Dynamic Obstacles</text>
+      <rect x="0" y="48" width="150" height="34" rx="17" fill="#ecfdf3" stroke="#a6d9bd"/>
+      <text x="75" y="70" text-anchor="middle" class="chipText" fill="#2f7d4f">ONNX Export</text>
+      <rect x="164" y="48" width="190" height="34" rx="17" fill="#fffaeb" stroke="#f3d19b"/>
+      <text x="259" y="70" text-anchor="middle" class="chipText" fill="#b7791f">Badcase Rules</text>
+    </g>
+  </g>
+
+  <g transform="translate(1080 379)">
+    <rect class="card" x="0" y="0" width="420" height="170" rx="22"/>
+    <text x="26" y="40" class="h2">Policy Metrics</text>
+    <g transform="translate(26 66)">
+      <text x="0" y="0" class="small">Unseen success</text><text x="342" y="0" text-anchor="end" class="small">76%</text>
+      <rect x="0" y="12" width="350" height="10" rx="5" fill="#e5e7eb"/><rect x="0" y="12" width="266" height="10" rx="5" fill="#6941c6"/>
+      <text x="0" y="48" class="small">Collision reduction</text><text x="342" y="48" text-anchor="end" class="small">-42%</text>
+      <rect x="0" y="60" width="350" height="10" rx="5" fill="#e5e7eb"/><rect x="0" y="60" width="246" height="10" rx="5" fill="#2f7d4f"/>
+      <text x="0" y="96" class="small">Repeat coverage</text><text x="342" y="96" text-anchor="end" class="small">13%</text>
+      <rect x="0" y="108" width="350" height="10" rx="5" fill="#e5e7eb"/><rect x="0" y="108" width="46" height="10" rx="5" fill="#b7791f"/>
+    </g>
+  </g>
+
+  <g transform="translate(1080 573)">
+    <rect class="card" x="0" y="0" width="420" height="186" rx="22"/>
+    <text x="26" y="40" class="h2">Closed-loop Actions</text>
+    <g transform="translate(26 64)">
+      <rect x="0" y="0" width="368" height="28" rx="8" fill="#fff1f0" stroke="#f7b7ad"/>
+      <text x="14" y="19" class="small" fill="#b42318">Dense obstacle stuck episodes -> curriculum maps</text>
+      <rect x="0" y="42" width="368" height="28" rx="8" fill="#fffaeb" stroke="#f3d19b"/>
+      <text x="14" y="61" class="small" fill="#b7791f">Shadow boundary errors -> relabel + augmentation</text>
+      <rect x="0" y="84" width="368" height="28" rx="8" fill="#ecfdf3" stroke="#a6d9bd"/>
+      <text x="14" y="103" class="small" fill="#2f7d4f">ONNX latency pass -> model promotion candidate</text>
+    </g>
+  </g>
+
+  <g transform="translate(92 792)">
+    <rect x="0" y="0" width="1408" height="112" rx="22" fill="#111827"/>
+    <text x="28" y="39" class="h2" fill="#ffffff">V2 Positioning</text>
+    <text x="28" y="69" class="body" fill="#cbd5e1">A complete portfolio-grade system with 3D replay and stronger robotics signals, while keeping training in a controllable 2D environment.</text>
+    <text x="28" y="93" class="small" fill="#94a3b8">Best target for this project: high interview value, manageable delivery risk, clear V3 expansion path.</text>
+  </g>
+</svg>

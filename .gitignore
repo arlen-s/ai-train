@@ -1,0 +1,25 @@
+.DS_Store
+.superpowers/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+node_modules/
+.next/
+dist/
+build/
+
+# Local generated data and model artifacts.
+data/raw/
+data/interim/
+data/processed/
+artifacts/models/
+artifacts/policies/
+artifacts/evaluations/
+
+# Keep small sample/report artifacts intentional.
+!data/samples/
+!artifacts/reports/
