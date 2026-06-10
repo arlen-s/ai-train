@@ -1,6 +1,6 @@
 # LawnBot AI API
 
-Phase 1 provides a FastAPI metadata shell for the V3-ready V2 training workbench. Phase 2 adds scenario coverage and Dataset version governance endpoints.
+Phase 1 provides a FastAPI metadata shell for the V3-ready V2 training workbench. Phase 2 adds scenario coverage and Dataset version governance endpoints. Phase 3 adds label schema and annotation QC workflow endpoints.
 
 Run the API:
 
@@ -11,7 +11,7 @@ PYTHONPATH=apps/api uvicorn app.main:app --reload
 Run tests:
 
 ```bash
-PYTHONPATH=apps/api python3 -m unittest apps.api.tests.test_api_smoke apps.api.tests.test_governance_api -v
+PYTHONPATH=apps/api python3 -m unittest apps.api.tests.test_api_smoke apps.api.tests.test_governance_api apps.api.tests.test_annotation_qc_api -v
 ```
 
 Current scope:
@@ -23,4 +23,8 @@ Current scope:
 - Dataset version records at `/api/datasets`
 - Dataset detail records at `/api/datasets/{dataset_id}`
 - Dataset coverage records at `/api/datasets/{dataset_id}/coverage`
+- current label schema at `/api/label-schemas/current`
+- annotation task records at `/api/annotation-tasks`
+- annotation task detail records at `/api/annotation-tasks/{task_id}`
+- QC update workflow at `/api/annotation-tasks/{task_id}/qc`
 - V3 backlog seed records

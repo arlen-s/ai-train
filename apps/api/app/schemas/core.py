@@ -61,6 +61,49 @@ class DatasetCoverage(BaseModel):
     v3_reserved_sources: List[str]
 
 
+class LabelClass(BaseModel):
+    name: str
+    display_name: str
+    target_type: Literal["detection", "segmentation", "point-cloud"]
+    boundary_rule: str
+    occlusion_rule: str
+    small_object_rule: str
+
+
+class LabelSchemaVersion(BaseModel):
+    id: str
+    version: str
+    allowed_tools: List[str]
+    detection_classes: List[LabelClass]
+    segmentation_classes: List[LabelClass]
+    point_cloud_classes: List[LabelClass]
+    qc_issue_categories: List[str]
+    annotation_rules: Dict[str, str]
+
+
+class AnnotationTask(BaseModel):
+    id: str
+    dataset_version_id: str
+    task_type: Literal["detection", "segmentation", "point-cloud"]
+    label_schema_id: str
+    tool: str
+    qc_status: Literal["pending", "review", "passed", "failed"]
+    assignee: str
+    reviewer: Optional[str] = None
+    reviewer_notes: str = ""
+    sample_count: int = Field(ge=0)
+    issue_count: int = Field(ge=0)
+    qc_issue_categories: List[str]
+    linked_badcases: List[str]
+
+
+class QCUpdateRequest(BaseModel):
+    qc_status: Literal["review", "passed", "failed"]
+    qc_issue_categories: List[str]
+    reviewer: str
+    reviewer_notes: str
+
+
 class DatasetSummary(BaseModel):
     version_id: str
     coverage_rate: float = Field(ge=0, le=1)

@@ -157,6 +157,18 @@
         <li>V3 预留 rosbag、MCAP、fleet-upload 等真实日志来源。</li>
       </ul>
     </section>
+
+    <section class="panel" aria-label="标注质检">
+      <h2>标注质检</h2>
+      <p>标注 API：<code>/api/label-schemas/current</code>、<code>/api/annotation-tasks</code>、<code>/api/annotation-tasks/{task_id}/qc</code>。</p>
+      <ul>
+        <li>支持 LabelImg、LabelMe、CVAT，覆盖 detection、segmentation 和 V3-ready point-cloud 预留标签。</li>
+        <li>检测类包括 person、pet、stone、tree、fence、obstacle-other。</li>
+        <li>分割类包括 lawn、soil、boundary、forbidden-zone、obstacle-region。</li>
+        <li>QC 问题类型包括 missing-label、wrong-class、poor-boundary、occlusion、small-object、blur、image-quality。</li>
+        <li>ann-boundary-009 关联 badcase-shadow-boundary-001，用于边界 mask 复核和 Badcase 回归。</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>

@@ -99,3 +99,9 @@ The static web shell at `apps/web/index.html` is intentionally lightweight. It p
 The Phase 2 vertical slice adds scenario coverage and Dataset version governance APIs while still using deterministic seed data. `apps/api/app/services/governance.py` owns coverage classification and Dataset lookup logic so future database persistence can replace seed data without changing route contracts.
 
 The web shell now exposes scenario governance and Dataset version governance sections in Chinese, including V2 simulated sensor fields and V3 real-log reservations for rosbag, MCAP, and fleet-upload sources.
+
+## Phase 3 Implementation Note
+
+The Phase 3 vertical slice adds label schema and annotation QC workflow APIs. `apps/api/app/services/annotation.py` owns current label schema retrieval, annotation task lookup, and QC update validation.
+
+The seed label schema covers LabelImg, LabelMe, CVAT, detection classes, segmentation classes, QC issue categories, and a V3-ready point-cloud label reservation. QC updates validate issue categories before mutating the in-memory task state.

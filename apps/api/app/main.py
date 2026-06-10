@@ -1,12 +1,21 @@
 from fastapi import FastAPI, HTTPException
 
 from app.schemas.core import (
+    AnnotationTask,
     DashboardSummary,
     DatasetCoverage,
     DatasetVersion,
+    LabelSchemaVersion,
+    QCUpdateRequest,
     Scenario,
     ScenarioCoverage,
     V3BacklogItem,
+)
+from app.services.annotation import (
+    get_annotation_task_or_none,
+    get_current_label_schema,
+    list_annotation_tasks,
+    update_annotation_task_qc,
 )
 from app.services.dashboard import get_dashboard_summary
 from app.services.governance import (
@@ -68,6 +77,35 @@ def dataset_coverage(dataset_id: str) -> DatasetCoverage:
     if coverage is None:
         raise HTTPException(status_code=404, detail="Dataset version not found")
     return coverage
+
+
+@app.get("/api/label-schemas/current", response_model=LabelSchemaVersion)
+def current_label_schema() -> LabelSchemaVersion:
+    return get_current_label_schema()
+
+
+@app.get("/api/annotation-tasks", response_model=list[AnnotationTask])
+def annotation_tasks() -> list[AnnotationTask]:
+    return list_annotation_tasks()
+
+
+@app.get("/api/annotation-tasks/{task_id}", response_model=AnnotationTask)
+def annotation_task_detail(task_id: str) -> AnnotationTask:
+    task = get_annotation_task_or_none(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Annotation task not found")
+    return task
+
+
+@app.patch("/api/annotation-tasks/{task_id}/qc", response_model=AnnotationTask)
+def update_annotation_task_qc_route(task_id: str, request: QCUpdateRequest) -> AnnotationTask:
+    try:
+        task = update_annotation_task_qc(task_id, request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if task is None:
+        raise HTTPException(status_code=404, detail="Annotation task not found")
+    return task
 
 
 @app.get("/api/backlog/v3", response_model=list[V3BacklogItem])
