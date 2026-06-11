@@ -37,7 +37,16 @@ describe("ThreeSimulationViewport", () => {
     expect(screen.getByText("raycast LiDAR")).toBeInTheDocument();
     expect(screen.getByText("terrain mesh")).toBeInTheDocument();
     expect(screen.getByText("dynamic actors")).toBeInTheDocument();
+    expect(screen.getByText("3D Simulation Viewport")).toBeInTheDocument();
+    expect(screen.getByText("Follow Robot")).toBeInTheDocument();
+    expect(screen.getByText("4 Views")).toBeInTheDocument();
     expect(screen.getByText("Costmap Overlay")).toBeInTheDocument();
     expect(screen.getByText("Route Replay")).toBeInTheDocument();
+    expect(screen.getByLabelText("Viewport sensor rail")).toBeInTheDocument();
+    expect(screen.getByLabelText("Viewport telemetry strip")).toBeInTheDocument();
+    expect(screen.getByText("RGB Camera")).toBeInTheDocument();
+    expect(screen.getByText("Depth Range")).toBeInTheDocument();
+    expect(screen.getByText("Semantic Mask")).toBeInTheDocument();
+    expect(screen.getByText("Ultrasonic")).toBeInTheDocument();
   });
 });

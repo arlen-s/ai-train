@@ -161,3 +161,9 @@ The Phase 12 cockpit refinement keeps the same `apps/web/src/components/industri
 The detailed React workbench remains available through the top-right cockpit action. The first viewport should prioritize simulation replay, sensor overlays, scenario generalization controls, benchmark status, and Badcase/fleet context while preserving the V2/V3 boundary: ROS 2, real logs, Isaac Sim, Gazebo, and real robot deployment remain V3-ready labels only unless the product scope is updated.
 
 Frontend verification for this phase includes Vitest workflow checks, production build, Chrome headless screenshot review, and a screenshot nonblank sanity check.
+
+## Phase 13 Implementation Note
+
+The Phase 13 cockpit layout turns the industrial screen into a one-screen operations console. Page-level scrolling is avoided for the main cockpit; left pipeline and right fleet/issue rail use internal scroll only when their content exceeds the visible rail height.
+
+Sensor panels that directly explain the active simulation, such as LiDAR, depth, segmentation, telemetry, occupancy, and GNSS, are embedded into the Three.js viewport as docked overlays. The right rail is reserved for decision context: scenario summary, fleet/deployment status, issue queue, and regional adaptation. This keeps the center simulation from leaving large blank space when secondary content is longer than the viewport.

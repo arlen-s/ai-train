@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 import type { CockpitData } from "./cockpitData";
+import { SensorDock } from "./SensorStack";
 
 const SCENE_WIDTH = 18;
 const SCENE_DEPTH = 12;
@@ -16,6 +17,28 @@ function createLine(points: THREE.Vector3[], color: number, yOffset = 0.15): THR
   const geometry = new THREE.BufferGeometry().setFromPoints(points.map((point) => point.clone().setY(point.y + yOffset)));
   const material = new THREE.LineBasicMaterial({ color, linewidth: 2 });
   return new THREE.Line(geometry, material);
+}
+
+function createPetMesh(): THREE.Group {
+  const pet = new THREE.Group();
+  const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xd9ad67, roughness: 0.6 });
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.46, 5, 10), bodyMaterial);
+  body.rotation.z = Math.PI / 2;
+  body.castShadow = true;
+  pet.add(body);
+
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.15, 12, 10), bodyMaterial);
+  head.position.set(0.33, 0.07, 0);
+  head.castShadow = true;
+  pet.add(head);
+
+  const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.018, 0.34, 8), bodyMaterial);
+  tail.position.set(-0.34, 0.11, 0);
+  tail.rotation.z = -0.8;
+  tail.castShadow = true;
+  pet.add(tail);
+
+  return pet;
 }
 
 function disposeObject(object: THREE.Object3D) {
@@ -199,7 +222,7 @@ export function ThreeSimulationViewport({ cockpit }: { cockpit: CockpitData }) {
       scene.add(instanced);
 
       const pathMaterial = new THREE.MeshStandardMaterial({ color: 0x8a7652, roughness: 0.88, metalness: 0.02 });
-      [[-3.8, 2.4, 5.6, 0.72, -0.18], [2.5, -2.6, 5.8, 0.82, 0.34], [0.6, 0.15, 7.4, 0.64, -0.72]].forEach(
+      [[-3.8, 2.4, 5.6, 0.72, -0.18], [2.5, -2.6, 5.8, 0.82, 0.34], [0.6, 0.15, 7.4, 0.64, -0.72], [5.8, 2.6, 4.1, 0.52, 1.12], [-5.6, -1.1, 3.4, 0.48, 0.78]].forEach(
         ([x, z, width, depth, rotation]) => {
           const path = new THREE.Mesh(new THREE.BoxGeometry(width, 0.035, depth), pathMaterial);
           path.position.set(x, 0.04, z);
@@ -210,12 +233,51 @@ export function ThreeSimulationViewport({ cockpit }: { cockpit: CockpitData }) {
       );
 
       const flowerMaterial = new THREE.MeshStandardMaterial({ color: 0xe1b155, roughness: 0.62 });
-      for (let index = 0; index < 42; index += 1) {
+      for (let index = 0; index < 76; index += 1) {
         const flower = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 6), flowerMaterial);
-        flower.position.set(-7 + ((index * 29) % 90) / 10, 0.16, 4.6 - ((index * 17) % 26) / 10);
+        flower.position.set(-8.1 + ((index * 29) % 160) / 10, 0.16, 5.2 - ((index * 17) % 42) / 10);
         flower.castShadow = true;
         scene.add(flower);
       }
+    }
+
+    function createGardenStructures() {
+      const houseWall = new THREE.Mesh(
+        new THREE.BoxGeometry(4.3, 1.8, 0.32),
+        new THREE.MeshStandardMaterial({ color: 0x53615e, roughness: 0.7, metalness: 0.04 })
+      );
+      houseWall.position.set(-1.2, 0.96, -6.25);
+      houseWall.castShadow = true;
+      scene.add(houseWall);
+
+      const roof = new THREE.Mesh(
+        new THREE.BoxGeometry(4.8, 0.22, 0.92),
+        new THREE.MeshStandardMaterial({ color: 0x384442, roughness: 0.62, metalness: 0.1 })
+      );
+      roof.position.set(-1.2, 1.92, -6.18);
+      roof.rotation.x = -0.08;
+      roof.castShadow = true;
+      scene.add(roof);
+
+      const greenhouse = new THREE.Mesh(
+        new THREE.BoxGeometry(2.2, 1.15, 0.08),
+        new THREE.MeshStandardMaterial({ color: 0x9fb8b4, transparent: true, opacity: 0.24, roughness: 0.22, metalness: 0.2 })
+      );
+      greenhouse.position.set(6.4, 0.64, -4.95);
+      greenhouse.castShadow = true;
+      scene.add(greenhouse);
+
+      const benchMaterial = new THREE.MeshStandardMaterial({ color: 0x6d5138, roughness: 0.76 });
+      const benchSeat = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.12, 0.42), benchMaterial);
+      benchSeat.position.set(-6.2, 0.36, -4.35);
+      benchSeat.rotation.y = 0.3;
+      benchSeat.castShadow = true;
+      scene.add(benchSeat);
+      const benchBack = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.48, 0.1), benchMaterial);
+      benchBack.position.set(-6.28, 0.62, -4.56);
+      benchBack.rotation.y = 0.3;
+      benchBack.castShadow = true;
+      scene.add(benchBack);
     }
 
     function createFence() {
@@ -339,6 +401,11 @@ export function ThreeSimulationViewport({ cockpit }: { cockpit: CockpitData }) {
       person.castShadow = true;
       scene.add(person);
 
+      const pet = createPetMesh();
+      pet.position.set(4.75, 0.24, 3.45);
+      pet.rotation.y = -0.68;
+      scene.add(pet);
+
       const zone = new THREE.Mesh(
         new THREE.PlaneGeometry(3.0, 1.7),
         new THREE.MeshBasicMaterial({ color: 0xff3d3d, transparent: true, opacity: 0.2, side: THREE.DoubleSide })
@@ -419,6 +486,7 @@ export function ThreeSimulationViewport({ cockpit }: { cockpit: CockpitData }) {
 
     createTerrain();
     createSceneInstrumentation();
+    createGardenStructures();
     createFence();
     createObstacles();
     createReplayOverlays();
@@ -428,6 +496,10 @@ export function ThreeSimulationViewport({ cockpit }: { cockpit: CockpitData }) {
       cockpit.scene.mapHeight
     );
     const { robot, light } = createRobot(robotPosition);
+    const scoutPosition = mapPointToScene([42, 24], cockpit.scene.mapWidth, cockpit.scene.mapHeight);
+    const { robot: scoutRobot } = createRobot(scoutPosition);
+    scoutRobot.scale.setScalar(0.78);
+    scoutRobot.rotation.y = 0.74;
     const lidarGroup = createSensorOverlays(robotPosition);
 
     const resize = () => {
@@ -447,6 +519,7 @@ export function ThreeSimulationViewport({ cockpit }: { cockpit: CockpitData }) {
     const animate = () => {
       frame += 1;
       robot.rotation.y = -0.62 + Math.sin(frame * 0.015) * 0.035;
+      scoutRobot.rotation.y = 0.74 + Math.sin(frame * 0.012) * 0.03;
       light.intensity = 1.2 + Math.sin(frame * 0.08) * 0.45;
       lidarGroup.rotation.y += 0.012;
       camera.lookAt(Math.sin(frame * 0.004) * 0.6, 0.2, Math.cos(frame * 0.004) * 0.4);
@@ -466,6 +539,13 @@ export function ThreeSimulationViewport({ cockpit }: { cockpit: CockpitData }) {
 
   return (
     <div aria-label="Three.js simulation viewport" className="three-viewport-shell" ref={mountRef}>
+      <div aria-label="Viewport command bar" className="viewport-command-bar">
+        <strong>3D Simulation Viewport</strong>
+        <span>Overlays</span>
+        <span>Sensors</span>
+        <span>4 Views</span>
+        <span>Follow Robot</span>
+      </div>
       <div aria-label="High fidelity render layers" className="viewport-hud render-layer-card">
         <strong>Physical Scene</strong>
         <span>terrain mesh</span>
@@ -481,6 +561,50 @@ export function ThreeSimulationViewport({ cockpit }: { cockpit: CockpitData }) {
         <span>Costmap Overlay</span>
         <span>Route Replay</span>
         <span>Sensor Frustum</span>
+      </div>
+      <SensorDock cockpit={cockpit} embedded />
+      <div aria-label="Viewport telemetry strip" className="viewport-bottom-strip">
+        <article>
+          <strong>RGB Camera</strong>
+          <span className="rgb-mini" />
+        </article>
+        <article>
+          <strong>Depth Range</strong>
+          <span className="depth-mini" />
+        </article>
+        <article>
+          <strong>Semantic Mask</strong>
+          <span className="segmentation-mini" />
+        </article>
+        <article>
+          <strong>Planned Path</strong>
+          <svg viewBox="0 0 120 48" aria-hidden="true">
+            <polyline points="6,40 24,31 44,35 62,15 82,18 112,8" />
+          </svg>
+        </article>
+        <article>
+          <strong>Coverage Map</strong>
+          <span className="coverage-mini" />
+        </article>
+        <article>
+          <strong>Terrain Slope</strong>
+          <span className="slope-mini" />
+        </article>
+        <article>
+          <strong>Grass Height</strong>
+          <span className="height-mini" />
+        </article>
+        <article>
+          <strong>Ultrasonic</strong>
+          <span className="ultrasonic-mini" />
+        </article>
+        <article>
+          <strong>GNSS Trajectory</strong>
+          <svg viewBox="0 0 120 48" aria-hidden="true">
+            <polyline className="gnss-a" points="5,38 20,30 38,33 58,18 80,22 112,12" />
+            <polyline className="gnss-b" points="5,12 28,18 48,13 70,25 94,20 116,29" />
+          </svg>
+        </article>
       </div>
       <div className="viewport-hud viewport-legend">
         <span className="legend planned">Planned Path</span>

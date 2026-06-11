@@ -25,6 +25,13 @@ body:has(.industrial-cockpit) {
     radial-gradient(circle at 72% 5%, rgba(42, 94, 145, 0.16), transparent 34%),
     linear-gradient(180deg, #061012, #091315 56%, #070d0e);
   color: #d7e7e5;
+  overflow: hidden;
+}
+
+body:has(.industrial-cockpit) .app-shell {
+  width: 100%;
+  max-width: none;
+  padding: 0 8px;
 }
 
 button,
@@ -229,7 +236,9 @@ button {
 }
 
 .industrial-cockpit {
-  min-height: calc(100vh - 20px);
+  height: calc(100vh - 20px);
+  min-height: 820px;
+  width: min(1920px, calc(100vw - 16px));
   margin: 10px auto;
   border: 1px solid rgba(95, 129, 132, 0.32);
   border-radius: 8px;
@@ -355,8 +364,10 @@ button {
 
 .industrial-grid {
   display: grid;
-  grid-template-columns: 238px minmax(0, 1fr) 392px;
+  grid-template-columns: 224px minmax(0, 1fr) 344px;
   gap: 7px;
+  height: calc(100% - 54px);
+  min-height: 0;
   padding: 7px;
 }
 
@@ -364,15 +375,27 @@ button {
   display: grid;
   align-content: start;
   min-width: 0;
+  min-height: 0;
   gap: 7px;
-  grid-template-rows: auto minmax(540px, calc(100vh - 312px)) auto;
+  grid-template-rows: auto minmax(470px, 1fr) 304px;
 }
 
 .industrial-right {
   display: grid;
   min-width: 0;
+  min-height: 0;
   gap: 8px;
   grid-template-rows: auto auto auto;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-right: 2px;
+  scrollbar-color: rgba(79, 127, 132, 0.6) transparent;
+}
+
+.pipeline-panel {
+  max-height: 100%;
+  overflow-y: auto;
+  scrollbar-color: rgba(79, 127, 132, 0.6) transparent;
 }
 
 .industrial-panel {
@@ -514,7 +537,7 @@ button {
 
 .three-viewport-shell {
   position: relative;
-  min-height: 540px;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid rgba(89, 124, 128, 0.42);
   border-radius: 6px;
@@ -540,6 +563,38 @@ button {
     radial-gradient(circle at 50% 30%, transparent 52%, rgba(0, 0, 0, 0.3));
 }
 
+.viewport-command-bar {
+  position: absolute;
+  z-index: 6;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) repeat(4, auto);
+  gap: 8px;
+  align-items: center;
+  min-height: 28px;
+  border-bottom: 1px solid rgba(89, 124, 128, 0.34);
+  background: rgba(7, 16, 18, 0.72);
+  color: #9bb8b8;
+  padding: 0 10px;
+  backdrop-filter: blur(8px);
+}
+
+.viewport-command-bar strong {
+  color: #dcece9;
+  font-size: 11px;
+}
+
+.viewport-command-bar span {
+  border-left: 1px solid rgba(89, 124, 128, 0.34);
+  color: #a9c1c1;
+  font-size: 10px;
+  font-weight: 760;
+  padding-left: 8px;
+  white-space: nowrap;
+}
+
 .viewport-hud {
   position: absolute;
   z-index: 4;
@@ -551,22 +606,23 @@ button {
 }
 
 .robot-card {
-  top: 14px;
+  top: 42px;
   left: 16px;
   display: grid;
   gap: 4px;
-  width: 170px;
-  padding: 10px;
+  width: 160px;
+  padding: 8px 9px;
 }
 
 .render-layer-card {
-  top: 14px;
-  right: 16px;
+  top: 42px;
+  left: 188px;
+  right: auto;
   display: grid;
   grid-template-columns: repeat(3, auto);
   gap: 4px 8px;
-  min-width: 260px;
-  padding: 9px 10px;
+  min-width: 236px;
+  padding: 8px 9px;
 }
 
 .render-layer-card strong {
@@ -596,13 +652,12 @@ button {
 }
 
 .viewport-mode-strip {
-  left: 50%;
-  bottom: 16px;
+  left: 16px;
+  bottom: 112px;
   display: grid;
   grid-template-columns: repeat(3, auto);
   gap: 6px;
   padding: 7px;
-  transform: translateX(-50%);
 }
 
 .viewport-mode-strip span {
@@ -627,8 +682,8 @@ button {
 }
 
 .viewport-legend {
-  right: 16px;
-  bottom: 62px;
+  right: 224px;
+  bottom: 112px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -672,6 +727,153 @@ button {
 
 .three-viewport-shell[data-webgl="unavailable"] .webgl-fallback {
   display: block;
+}
+
+.viewport-sensor-dock,
+.viewport-sensor-rail {
+  position: absolute;
+  z-index: 5;
+  top: 42px;
+  right: 14px;
+  display: grid;
+  width: min(214px, 25%);
+  max-height: calc(100% - 124px);
+  gap: 5px;
+  overflow-y: auto;
+  padding-right: 2px;
+  scrollbar-color: rgba(79, 127, 132, 0.6) transparent;
+}
+
+.viewport-sensor-dock .industrial-panel,
+.viewport-sensor-rail .industrial-panel {
+  background: rgba(7, 17, 20, 0.66);
+  backdrop-filter: blur(8px);
+}
+
+.viewport-sensor-dock .industrial-panel-title,
+.viewport-sensor-rail .industrial-panel-title {
+  padding: 6px 8px;
+}
+
+.viewport-sensor-dock .sensor-panel,
+.viewport-sensor-rail .sensor-panel {
+  min-height: 0;
+}
+
+.viewport-sensor-dock .lidar-mini,
+.viewport-sensor-dock .depth-mini,
+.viewport-sensor-dock .segmentation-mini,
+.viewport-sensor-dock .occupancy-mini,
+.viewport-sensor-dock .gnss-mini,
+.viewport-sensor-rail .lidar-mini,
+.viewport-sensor-rail .occupancy-mini {
+  height: 38px;
+  margin: 6px;
+}
+
+.viewport-sensor-dock .telemetry-panel dl,
+.viewport-sensor-rail .telemetry-panel dl {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px 8px;
+  max-height: 54px;
+  overflow: hidden;
+  padding: 6px 8px;
+}
+
+.viewport-sensor-dock .telemetry-panel div,
+.viewport-sensor-rail .telemetry-panel div {
+  grid-template-columns: auto 1fr;
+}
+
+.viewport-bottom-strip {
+  position: absolute;
+  z-index: 5;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  display: grid;
+  grid-template-columns: 1.05fr repeat(8, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.viewport-bottom-strip article {
+  min-width: 0;
+  height: 88px;
+  overflow: hidden;
+  border: 1px solid rgba(88, 135, 140, 0.45);
+  border-radius: 5px;
+  background: rgba(7, 17, 20, 0.78);
+  padding: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.viewport-bottom-strip strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #dcece9;
+  font-size: 10px;
+}
+
+.viewport-bottom-strip svg {
+  width: 100%;
+  height: 54px;
+  border-radius: 3px;
+  background: #071014;
+}
+
+.viewport-bottom-strip polyline {
+  fill: none;
+  stroke: #39e17d;
+  stroke-width: 2;
+}
+
+.viewport-bottom-strip .gnss-b {
+  stroke: #ffb83d;
+}
+
+.rgb-mini,
+.coverage-mini,
+.viewport-bottom-strip .depth-mini,
+.viewport-bottom-strip .segmentation-mini,
+.slope-mini,
+.height-mini,
+.ultrasonic-mini {
+  display: block;
+  height: 54px;
+  border-radius: 3px;
+  background: #071014;
+}
+
+.rgb-mini {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 38%),
+    linear-gradient(135deg, #1e3b23, #6d7938 46%, #23353a 47%, #0d1719);
+}
+
+.coverage-mini {
+  background:
+    linear-gradient(150deg, rgba(45, 209, 122, 0.84) 0 32%, rgba(39, 120, 205, 0.82) 32% 58%, rgba(22, 36, 50, 0.96) 58% 70%, rgba(141, 205, 62, 0.9) 70%),
+    #071014;
+}
+
+.slope-mini {
+  background:
+    radial-gradient(circle at 72% 30%, #e84b36, transparent 18%),
+    radial-gradient(circle at 42% 60%, #ffc845, transparent 22%),
+    linear-gradient(150deg, #257642, #68c95a 52%, #1b4d38);
+}
+
+.height-mini {
+  background:
+    radial-gradient(circle at 40% 46%, #9bdc45, transparent 30%),
+    linear-gradient(150deg, #194626, #4aa33d 58%, #0f2819);
+}
+
+.ultrasonic-mini {
+  background:
+    repeating-radial-gradient(circle at 50% 72%, transparent 0 9px, rgba(86, 218, 202, 0.45) 10px 11px),
+    radial-gradient(circle at 50% 72%, rgba(86, 218, 202, 0.2), transparent 54%),
+    #071014;
 }
 
 .sensor-stack,
@@ -795,8 +997,8 @@ button {
 .fleet-list,
 .issue-list {
   display: grid;
-  gap: 8px;
-  padding: 10px;
+  gap: 6px;
+  padding: 8px;
 }
 
 .fleet-card,
@@ -810,13 +1012,13 @@ button {
 }
 
 .fleet-card {
-  grid-template-columns: 70px minmax(0, 1fr) 56px;
+  grid-template-columns: 58px minmax(0, 1fr) 54px;
   align-items: center;
 }
 
 .robot-thumb {
   position: relative;
-  height: 44px;
+  height: 36px;
   overflow: hidden;
   border-radius: 5px;
   background:
@@ -826,10 +1028,10 @@ button {
 
 .robot-thumb i {
   position: absolute;
-  left: 16px;
-  top: 16px;
-  width: 40px;
-  height: 18px;
+  left: 12px;
+  top: 13px;
+  width: 34px;
+  height: 15px;
   border-radius: 7px;
   background: linear-gradient(180deg, #d9e2df, #46575a);
   transform: rotate(-12deg);
@@ -975,14 +1177,16 @@ button {
 }
 
 .benchmark-suite {
-  padding-bottom: 10px;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 7px;
 }
 
 .benchmark-metrics {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 6px;
-  padding: 8px;
+  gap: 5px;
+  padding: 7px;
 }
 
 .benchmark-card {
@@ -990,7 +1194,7 @@ button {
   border: 1px solid rgba(77, 113, 118, 0.36);
   border-radius: 5px;
   background: rgba(7, 18, 21, 0.78);
-  padding: 8px;
+  padding: 6px 7px;
 }
 
 .benchmark-card span,
@@ -1005,9 +1209,9 @@ button {
 
 .benchmark-card strong {
   display: block;
-  margin: 5px 0 3px;
+  margin: 3px 0 2px;
   color: #e4f3ef;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1;
 }
 
@@ -1021,7 +1225,7 @@ button {
 
 .benchmark-card svg {
   width: 100%;
-  height: 22px;
+  height: 18px;
 }
 
 .benchmark-card polyline {
@@ -1040,8 +1244,8 @@ button {
 .benchmark-analysis-grid {
   display: grid;
   grid-template-columns: 1.25fr 0.75fr 0.7fr;
-  gap: 7px;
-  padding: 0 8px 8px;
+  gap: 6px;
+  padding: 0 7px 6px;
 }
 
 .industrial-subpanel {
@@ -1049,7 +1253,7 @@ button {
   border: 1px solid rgba(77, 113, 118, 0.32);
   border-radius: 5px;
   background: rgba(7, 18, 21, 0.6);
-  padding: 8px;
+  padding: 6px;
 }
 
 .industrial-subpanel h3 {
@@ -1060,7 +1264,7 @@ button {
 
 .trend-panel svg {
   width: 100%;
-  height: 84px;
+  height: 58px;
 }
 
 .trend.collision {
@@ -1073,7 +1277,7 @@ button {
 
 .failure-panel {
   display: grid;
-  grid-template-columns: 72px 1fr;
+  grid-template-columns: 56px 1fr;
   gap: 8px;
   align-items: center;
 }
@@ -1084,8 +1288,8 @@ button {
 
 .failure-ring {
   display: grid;
-  width: 66px;
-  height: 66px;
+  width: 52px;
+  height: 52px;
   place-items: center;
   border-radius: 50%;
   background: conic-gradient(#2fd77d 0 39%, #ffb83d 39% 62%, #b46dff 62% 79%, #31a7ff 79% 100%);
@@ -1093,8 +1297,8 @@ button {
 
 .failure-ring strong {
   display: grid;
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   place-items: center;
   border-radius: 50%;
   background: #081416;
@@ -1139,7 +1343,7 @@ button {
   grid-template-columns: repeat(4, 1fr);
   align-items: end;
   gap: 8px;
-  height: 80px;
+  height: 56px;
 }
 
 .mini-bars span {
@@ -1175,7 +1379,7 @@ button {
   border-bottom-color: rgba(89, 124, 128, 0.24);
   color: inherit;
   font-size: 11px;
-  padding: 7px 8px;
+  padding: 5px 7px;
 }
 
 @media (max-width: 1280px) {

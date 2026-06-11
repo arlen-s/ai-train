@@ -1,8 +1,49 @@
 import type { CockpitData } from "./cockpitData";
 
-export function SensorStack({ cockpit }: { cockpit: CockpitData }) {
+export function SensorDock({ cockpit, embedded = false }: { cockpit: CockpitData; embedded?: boolean }) {
+  if (embedded) {
+    return (
+      <section aria-label="Viewport sensor rail" className="viewport-sensor-rail">
+        <article className="industrial-panel sensor-panel">
+          <div className="industrial-panel-title">
+            <span>LiDAR</span>
+            <small>{cockpit.sensors.lidarRayCount * 8}ch</small>
+          </div>
+          <div aria-label="LiDAR point cloud mini view" className="lidar-mini">
+            {Array.from({ length: 48 }, (_, index) => (
+              <i key={index} style={{ left: `${(index * 17) % 100}%`, top: `${18 + ((index * 23) % 70)}%` }} />
+            ))}
+          </div>
+        </article>
+        <article className="industrial-panel telemetry-panel">
+          <div className="industrial-panel-title">
+            <span>Telemetry</span>
+            <small>IMU / GNSS</small>
+          </div>
+          <dl>
+            <div><dt>x</dt><dd>12.45</dd></div>
+            <div><dt>y</dt><dd>-3.21</dd></div>
+            <div><dt>yaw</dt><dd>91.7 deg</dd></div>
+            <div><dt>speed</dt><dd>{cockpit.robot.speed}</dd></div>
+            <div><dt>battery</dt><dd>{cockpit.robot.battery}%</dd></div>
+            <div><dt>link</dt><dd>Excellent</dd></div>
+          </dl>
+        </article>
+        <article className="industrial-panel sensor-panel occupancy-panel">
+          <div className="industrial-panel-title">
+            <span>Occupancy Grid</span>
+            <small>local costmap</small>
+          </div>
+          <div aria-label="Occupancy grid mini view" className="occupancy-mini">
+            <span className="occupancy-robot" />
+          </div>
+        </article>
+      </section>
+    );
+  }
+
   return (
-    <section className="sensor-stack">
+    <section aria-label="Sensor stack" className="sensor-stack">
       <article className="industrial-panel sensor-panel">
         <div className="industrial-panel-title">
           <span>LiDAR</span>
@@ -64,4 +105,8 @@ export function SensorStack({ cockpit }: { cockpit: CockpitData }) {
       </article>
     </section>
   );
+}
+
+export function SensorStack({ cockpit }: { cockpit: CockpitData }) {
+  return <SensorDock cockpit={cockpit} />;
 }

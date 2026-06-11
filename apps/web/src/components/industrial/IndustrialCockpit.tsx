@@ -7,7 +7,6 @@ import { FleetOpsPanel } from "./FleetOpsPanel";
 import { PipelineGraph } from "./PipelineGraph";
 import { ScenarioGeneralization } from "./ScenarioGeneralization";
 import { ScenarioSummary } from "./ScenarioSummary";
-import { SensorStack } from "./SensorStack";
 import { ThreeSimulationViewport } from "./ThreeSimulationViewport";
 
 export function IndustrialCockpit({
@@ -56,16 +55,15 @@ export function IndustrialCockpit({
         </div>
       </header>
 
-      <div className="industrial-grid">
+      <div aria-label="One-screen cockpit frame" className="industrial-grid">
         <PipelineGraph />
         <main className="industrial-main">
           <ScenarioGeneralization cockpit={cockpit} />
           <ThreeSimulationViewport cockpit={cockpit} />
           <BenchmarkSuite cockpit={cockpit} />
         </main>
-        <aside className="industrial-right">
+        <aside aria-label="Fleet Rail" className="industrial-right">
           <ScenarioSummary cockpit={cockpit} />
-          <SensorStack cockpit={cockpit} />
           <FleetOpsPanel cockpit={cockpit} />
         </aside>
       </div>
