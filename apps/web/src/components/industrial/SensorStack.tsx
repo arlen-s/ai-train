@@ -42,6 +42,26 @@ export function SensorStack({ cockpit }: { cockpit: CockpitData }) {
           <div><dt>connection</dt><dd>Excellent</dd></div>
         </dl>
       </article>
+      <article className="industrial-panel sensor-panel occupancy-panel">
+        <div className="industrial-panel-title">
+          <span>Occupancy Grid</span>
+          <small>local costmap</small>
+        </div>
+        <div aria-label="Occupancy grid mini view" className="occupancy-mini">
+          <span className="occupancy-robot" />
+        </div>
+      </article>
+      <article className="industrial-panel sensor-panel">
+        <div className="industrial-panel-title">
+          <span>GNSS Trajectory</span>
+          <small>R-017</small>
+        </div>
+        <svg aria-label="GNSS trajectory mini view" className="gnss-mini" viewBox="0 0 180 72">
+          <polyline className="gnss-planned" points="8,58 28,42 50,48 76,24 104,30 132,14 166,20" />
+          <polyline className="gnss-actual" points="10,63 32,48 54,51 78,31 108,36 136,21 168,26" />
+          <polyline className="gnss-detected" points="6,18 36,22 64,14 96,28 126,22 170,36" />
+        </svg>
+      </article>
     </section>
   );
 }

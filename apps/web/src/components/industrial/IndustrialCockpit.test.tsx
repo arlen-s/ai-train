@@ -12,11 +12,15 @@ describe("IndustrialCockpit", () => {
     expect(screen.getByRole("button", { name: "打开详细工作台" })).toBeInTheDocument();
     expect(screen.getByText("V2 Simulation Pipeline")).toBeInTheDocument();
     expect(screen.getByText("ROS 2 reserved for V3")).toBeInTheDocument();
+    expect(screen.getByText("Scenario Generalization")).toBeInTheDocument();
     expect(screen.getByLabelText("Three.js simulation viewport")).toBeInTheDocument();
     expect(screen.getByText("LiDAR")).toBeInTheDocument();
     expect(screen.getByText("Telemetry")).toBeInTheDocument();
+    expect(screen.getByText("Scenario Summary")).toBeInTheDocument();
     expect(screen.getByText("Fleet & Deployment")).toBeInTheDocument();
+    expect(screen.getByText("Regional Adaptation")).toBeInTheDocument();
     expect(screen.getByText("Evaluation & Benchmark Suite")).toBeInTheDocument();
+    expect(screen.getByText("Robot Benchmark Table")).toBeInTheDocument();
     expect(screen.getByText("Issue Queue")).toBeInTheDocument();
   });
 });

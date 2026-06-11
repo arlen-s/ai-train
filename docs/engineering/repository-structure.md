@@ -153,3 +153,11 @@ The frontend remains a product UI layer only. It consumes deterministic metadata
 The Phase 11 vertical slice adds an industrial robotics cockpit under `apps/web/src/components/industrial`. The central simulation viewport uses Three.js/WebGL geometry, lighting, materials, shadows, paths, coverage overlays, sensor rays, and actor meshes rather than a screenshot background.
 
 This remains V2 simulation visualization. The UI may label ROS 2, real sensor logs, and sim-to-real validation as V3-ready context, but it does not claim real ROS/Gazebo/Isaac Sim integration or real robot deployment inside V2.
+
+## Phase 12 Implementation Note
+
+The Phase 12 cockpit refinement keeps the same `apps/web/src/components/industrial` boundary and improves the first viewport toward a high-fidelity industrial simulation console. The center view remains a real Three.js/WebGL scene with procedural terrain, mower geometry, dynamic actors, route replay, sensor rays, grid/costmap overlays, lighting, shadows, and scene instrumentation. Reference imagery must not be used as a background or texture.
+
+The detailed React workbench remains available through the top-right cockpit action. The first viewport should prioritize simulation replay, sensor overlays, scenario generalization controls, benchmark status, and Badcase/fleet context while preserving the V2/V3 boundary: ROS 2, real logs, Isaac Sim, Gazebo, and real robot deployment remain V3-ready labels only unless the product scope is updated.
+
+Frontend verification for this phase includes Vitest workflow checks, production build, Chrome headless screenshot review, and a screenshot nonblank sanity check.

@@ -7,6 +7,13 @@ export interface CockpitMetric {
   tone: "ok" | "warn" | "risk" | "neutral";
 }
 
+export interface CockpitParameter {
+  label: string;
+  value: string;
+  detail?: string;
+  tone?: "ok" | "warn" | "risk" | "neutral";
+}
+
 export interface CockpitData {
   controls: {
     project: string;
@@ -36,8 +43,25 @@ export interface CockpitData {
     ultrasonic: number[];
     modalities: string[];
   };
+  scenarioParameters: CockpitParameter[];
+  scenarioSummary: {
+    coverage: CockpitMetric;
+    traversability: CockpitMetric;
+    difficulty: CockpitMetric;
+  };
   benchmarks: CockpitMetric[];
+  benchmarkRows: Array<{
+    robotId: string;
+    distanceKm: string;
+    coverage: string;
+    collisionRate: string;
+    stuckRate: string;
+    avgResponse: string;
+    safetyScore: string;
+    uptime: string;
+  }>;
   fleet: Array<{ id: string; status: string; health: number; battery: number; ota: string }>;
+  regionalAdaptation: Array<{ region: string; score: number }>;
   issues: Array<{ id: string; category: string; severity: string; owner: string; status: string }>;
 }
 
@@ -89,6 +113,22 @@ export function createCockpitData(data: WorkbenchData): CockpitData {
       ultrasonic: frame?.ultrasonic ?? [],
       modalities: data.rlEnvironments[0]?.sensor_modalities ?? []
     },
+    scenarioParameters: [
+      { label: "Season", value: "Summer", tone: "ok" },
+      { label: "Weather", value: "Light Rain", detail: "wet grass", tone: "warn" },
+      { label: "Terrain", value: "Mixed", detail: "flat + slope" },
+      { label: "Grass Type", value: "Bermuda" },
+      { label: "Grass Height", value: "6.2 cm", detail: "2.0-12.0" },
+      { label: "Slope Range", value: "0-28 deg", detail: "max 45" },
+      { label: "Obstacle Density", value: "Medium" },
+      { label: "Boundary Complexity", value: "High", tone: "warn" },
+      { label: "Domain Randomization", value: "78%", detail: "seed 482734", tone: "ok" }
+    ],
+    scenarioSummary: {
+      coverage: { label: "Coverage est.", value: percent(data.dashboard.rl.coverage_rate), delta: "+4.2%", tone: "ok" },
+      traversability: { label: "Traversability", value: "81%", delta: "+1.8%", tone: "ok" },
+      difficulty: { label: "Difficulty Score", value: "0.71", delta: "+0.09", tone: "warn" }
+    },
     benchmarks: [
       { label: "Coverage Completeness", value: percent(data.dashboard.rl.coverage_rate), delta: improvement, tone: "ok" },
       {
@@ -102,11 +142,23 @@ export function createCockpitData(data: WorkbenchData): CockpitData {
       { label: "Safety Score", value: "92", delta: "+3", tone: "ok" },
       { label: "Sim-to-Real Gap", value: "9.4%", delta: "V3", tone: "neutral" }
     ],
+    benchmarkRows: [
+      { robotId: "R-017", distanceKm: "23.6", coverage: "76.8%", collisionRate: "0.012", stuckRate: "0.38", avgResponse: "0.42", safetyScore: "92", uptime: "98.1%" },
+      { robotId: "R-015", distanceKm: "21.1", coverage: "74.2%", collisionRate: "0.018", stuckRate: "0.45", avgResponse: "0.47", safetyScore: "90", uptime: "97.3%" },
+      { robotId: "R-003", distanceKm: "20.4", coverage: "72.9%", collisionRate: "0.015", stuckRate: "0.40", avgResponse: "0.43", safetyScore: "91", uptime: "97.8%" },
+      { robotId: "R-014", distanceKm: "19.7", coverage: "71.3%", collisionRate: "0.021", stuckRate: "0.52", avgResponse: "0.51", safetyScore: "88", uptime: "96.5%" }
+    ],
     fleet: [
       { id: "R-017", status: "Active", health: 92, battery: 78, ota: "Rolling Out" },
       { id: "R-015", status: "Active", health: 89, battery: 64, ota: "Up to date" },
       { id: "R-003", status: "Idle", health: 95, battery: 95, ota: "Up to date" },
       { id: "R-008", status: "Maintenance", health: 61, battery: 22, ota: "Failed" }
+    ],
+    regionalAdaptation: [
+      { region: "North America", score: 94 },
+      { region: "Europe", score: 89 },
+      { region: "Japan", score: 91 },
+      { region: "Southeast Asia", score: 83 }
     ],
     issues: data.badcases.map((badcase) => ({
       id: badcase.id,

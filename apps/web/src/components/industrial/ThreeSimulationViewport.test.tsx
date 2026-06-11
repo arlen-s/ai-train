@@ -29,4 +29,15 @@ describe("ThreeSimulationViewport", () => {
     expect(screen.getByLabelText("Three.js simulation viewport")).toBeInTheDocument();
     expect(await screen.findByText(/WebGL unavailable/)).toBeInTheDocument();
   });
+
+  it("exposes high-fidelity industrial render layers around the WebGL scene", () => {
+    render(<ThreeSimulationViewport cockpit={createCockpitData(createMockWorkbenchData())} />);
+
+    expect(screen.getByText("Physical Scene")).toBeInTheDocument();
+    expect(screen.getByText("raycast LiDAR")).toBeInTheDocument();
+    expect(screen.getByText("terrain mesh")).toBeInTheDocument();
+    expect(screen.getByText("dynamic actors")).toBeInTheDocument();
+    expect(screen.getByText("Costmap Overlay")).toBeInTheDocument();
+    expect(screen.getByText("Route Replay")).toBeInTheDocument();
+  });
 });

@@ -11,10 +11,19 @@ export function FleetOpsPanel({ cockpit }: { cockpit: CockpitData }) {
         <div className="fleet-list">
           {cockpit.fleet.map((robot) => (
             <article className={`fleet-card ${robot.status.toLowerCase()}`} key={robot.id}>
-              <strong>{robot.id}</strong>
-              <span>{robot.status}</span>
-              <div><b style={{ width: `${robot.health}%` }} /></div>
-              <small>Battery {robot.battery}% · OTA {robot.ota}</small>
+              <div className="robot-thumb" aria-hidden="true">
+                <i />
+              </div>
+              <div className="fleet-card-body">
+                <strong>{robot.id}</strong>
+                <span>{robot.status}</span>
+                <div><b style={{ width: `${robot.health}%` }} /></div>
+                <small>Health {robot.health}% · Battery {robot.battery}%</small>
+              </div>
+              <div className="fleet-card-meta">
+                <span>OTA</span>
+                <strong>{robot.ota}</strong>
+              </div>
             </article>
           ))}
         </div>

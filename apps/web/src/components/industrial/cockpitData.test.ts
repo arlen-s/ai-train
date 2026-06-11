@@ -14,6 +14,10 @@ describe("createCockpitData", () => {
     expect(data.scene.path).toHaveLength(6);
     expect(data.scene.dynamicActors).toHaveLength(2);
     expect(data.sensors.lidarRayCount).toBe(8);
+    expect(data.scenarioParameters).toHaveLength(9);
+    expect(data.scenarioSummary.coverage.value).toBe("82%");
+    expect(data.regionalAdaptation).toHaveLength(4);
+    expect(data.benchmarkRows).toHaveLength(4);
     expect(data.benchmarks.some((metric) => metric.label === "Coverage Completeness")).toBe(true);
     expect(data.issues[0].severity).toBe("high");
   });
