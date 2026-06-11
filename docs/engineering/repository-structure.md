@@ -147,3 +147,9 @@ This phase keeps V2 scope locked while documenting industrial-track upgrades suc
 The Phase 10 vertical slice upgrades `apps/web` from a static HTML shell to a Vite + React + TypeScript workbench. `apps/web/src/lib/api.ts` owns typed API loading for the existing FastAPI metadata endpoints, while `apps/web/src/App.tsx` and focused components render the Chinese-first cockpit, workflow tabs, Dataset/QC panels, perception training views, RL replay, Evaluation/Badcase surfaces, report export, and V3 planning entry points.
 
 The frontend remains a product UI layer only. It consumes deterministic metadata APIs and does not run data cleaning, perception training, RL training, or evaluation jobs in the browser.
+
+## Phase 11 Implementation Note
+
+The Phase 11 vertical slice adds an industrial robotics cockpit under `apps/web/src/components/industrial`. The central simulation viewport uses Three.js/WebGL geometry, lighting, materials, shadows, paths, coverage overlays, sensor rays, and actor meshes rather than a screenshot background.
+
+This remains V2 simulation visualization. The UI may label ROS 2, real sensor logs, and sim-to-real validation as V3-ready context, but it does not claim real ROS/Gazebo/Isaac Sim integration or real robot deployment inside V2.

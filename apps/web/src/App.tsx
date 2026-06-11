@@ -34,6 +34,7 @@ import {
   YAxis
 } from "recharts";
 
+import { IndustrialCockpit } from "./components/industrial/IndustrialCockpit";
 import { ReplayMap } from "./components/ReplayMap";
 import { exportReportMarkdown, type Fetcher, loadWorkbenchData } from "./lib/api";
 import type {
@@ -777,7 +778,9 @@ export default function App({ initialData, fetcher, apiBaseUrl }: AppProps) {
 
   return (
     <main className="app-shell">
-      <header className="topbar">
+      <IndustrialCockpit data={data} />
+
+      <header className="topbar legacy-topbar">
         <div className="brand-block">
           <div className="brand-mark" aria-hidden="true">
             <Bot size={25} />

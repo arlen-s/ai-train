@@ -2,6 +2,8 @@
 
 Phase 10 replaces the original static shell with a Vite + React + TypeScript frontend for the Chinese-first V2 robotics AI training workbench.
 
+Phase 11 adds a Three.js industrial cockpit. The simulation viewport is a real WebGL scene built from geometry, lights, materials, paths, sensor rays, actor meshes, and procedural terrain detail. It does not use a screenshot background to fake 3D.
+
 ## Commands
 
 ```bash

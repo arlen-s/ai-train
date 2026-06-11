@@ -10,6 +10,9 @@ describe("LawnBot AI workbench", () => {
     render(<App initialData={createMockWorkbenchData()} />);
 
     expect(await screen.findByText("LawnBot AI 训练工作台")).toBeInTheDocument();
+    expect(screen.getByText("LawnBrain")).toBeInTheDocument();
+    expect(screen.getByLabelText("Three.js simulation viewport")).toBeInTheDocument();
+    expect(screen.getByText("Evaluation & Benchmark Suite")).toBeInTheDocument();
     expect(screen.getByText("Dataset 覆盖率")).toBeInTheDocument();
     expect(screen.getByText("72%")).toBeInTheDocument();
     expect(screen.getByText("det-yolo-v2")).toBeInTheDocument();
