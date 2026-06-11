@@ -9,8 +9,8 @@ The project demonstrates scenario data planning, dataset governance, annotation 
 - Product target: V2 training workbench with V3-ready architecture.
 - Main UI language: Simplified Chinese, with standard technical labels kept in English.
 - Backend: FastAPI metadata shell with deterministic seed data.
-- Web: static Chinese-first V2 workbench shell.
-- Tests: standard-library `unittest` smoke tests.
+- Web: Vite + React + TypeScript Chinese-first V2 workbench.
+- Tests: standard-library `unittest` API tests and Vitest frontend workflow tests.
 
 ## Run API
 
@@ -22,6 +22,8 @@ PYTHONPATH=apps/api uvicorn app.main:app --reload
 
 ```bash
 PYTHONPATH=apps/api python3 -m unittest apps.api.tests.test_api_smoke -v
+cd apps/web && npm test -- --run
+cd apps/web && npm run build
 ```
 
 ## Key Docs
