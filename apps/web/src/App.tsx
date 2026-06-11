@@ -700,6 +700,7 @@ export default function App({ initialData, fetcher, apiBaseUrl }: AppProps) {
   const [data, setData] = useState<WorkbenchData | undefined>(initialData);
   const [loadState, setLoadState] = useState<"idle" | "loading" | "ready" | "error">(initialData ? "ready" : "idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isWorkbenchOpen, setIsWorkbenchOpen] = useState(false);
 
   useEffect(() => {
     if (initialData) {
@@ -778,87 +779,95 @@ export default function App({ initialData, fetcher, apiBaseUrl }: AppProps) {
 
   return (
     <main className="app-shell">
-      <IndustrialCockpit data={data} />
+      <IndustrialCockpit
+        data={data}
+        isWorkbenchOpen={isWorkbenchOpen}
+        onWorkbenchToggle={() => setIsWorkbenchOpen((current) => !current)}
+      />
 
-      <header className="topbar legacy-topbar">
-        <div className="brand-block">
-          <div className="brand-mark" aria-hidden="true">
-            <Bot size={25} />
-          </div>
-          <div>
-            <p>V2 Robotics AI Workbench</p>
-            <h1>{data.dashboard.product_name}</h1>
-          </div>
-        </div>
-        <div className="topbar-actions">
-          <span className="status-chip">
-            <CheckCircle2 size={16} />
-            {data.dashboard.architecture_mode}
-          </span>
-          <span className="status-chip muted">
-            <Braces size={16} />
-            zh-CN / English tags
-          </span>
-        </div>
-      </header>
+      {isWorkbenchOpen ? (
+        <section aria-label="Detailed workbench" className="detailed-workbench">
+          <header className="topbar legacy-topbar">
+            <div className="brand-block">
+              <div className="brand-mark" aria-hidden="true">
+                <Bot size={25} />
+              </div>
+              <div>
+                <p>V2 Robotics AI Workbench</p>
+                <h1>{data.dashboard.product_name}</h1>
+              </div>
+            </div>
+            <div className="topbar-actions">
+              <span className="status-chip">
+                <CheckCircle2 size={16} />
+                {data.dashboard.architecture_mode}
+              </span>
+              <span className="status-chip muted">
+                <Braces size={16} />
+                zh-CN / English tags
+              </span>
+            </div>
+          </header>
 
-      <section className="mission-strip">
-        <div>
-          <Sparkles size={18} />
-          <span>真实场景采集</span>
-        </div>
-        <div>
-          <Layers3 size={18} />
-          <span>Dataset/QC</span>
-        </div>
-        <div>
-          <Target size={18} />
-          <span>感知训练</span>
-        </div>
-        <div>
-          <Route size={18} />
-          <span>RL agent 泛化</span>
-        </div>
-        <div>
-          <GitBranch size={18} />
-          <span>Badcase 闭环</span>
-        </div>
-        <div>
-          <Map size={18} />
-          <span>V3-ready 3D</span>
-        </div>
-      </section>
+          <section className="mission-strip">
+            <div>
+              <Sparkles size={18} />
+              <span>真实场景采集</span>
+            </div>
+            <div>
+              <Layers3 size={18} />
+              <span>Dataset/QC</span>
+            </div>
+            <div>
+              <Target size={18} />
+              <span>感知训练</span>
+            </div>
+            <div>
+              <Route size={18} />
+              <span>RL agent 泛化</span>
+            </div>
+            <div>
+              <GitBranch size={18} />
+              <span>Badcase 闭环</span>
+            </div>
+            <div>
+              <Map size={18} />
+              <span>V3-ready 3D</span>
+            </div>
+          </section>
 
-      <nav aria-label="Workbench workflow" className="tabbar" role="tablist">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const selected = activeTab === tab.id;
-          return (
-            <button
-              aria-controls={`panel-${tab.id}`}
-              aria-selected={selected}
-              className={selected ? "active" : ""}
-              id={`tab-${tab.id}`}
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              role="tab"
-              type="button"
-            >
-              <Icon size={17} />
-              {tab.label}
-            </button>
-          );
-        })}
-      </nav>
+          <nav aria-label="Workbench workflow" className="tabbar" role="tablist">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const selected = activeTab === tab.id;
+              return (
+                <button
+                  aria-controls={`panel-${tab.id}`}
+                  aria-selected={selected}
+                  className={selected ? "active" : ""}
+                  id={`tab-${tab.id}`}
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  role="tab"
+                  type="button"
+                >
+                  <Icon size={17} />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </nav>
 
-      <section
-        aria-labelledby={`tab-${activeTab}`}
-        className="workspace"
-        id={`panel-${activeTab}`}
-        role="tabpanel"
-      >
-        {activePanel}
-      </section>
+          <section
+            aria-labelledby={`tab-${activeTab}`}
+            className="workspace"
+            id={`panel-${activeTab}`}
+            role="tabpanel"
+          >
+            {activePanel}
+          </section>
+        </section>
+      ) : null}
     </main>
   );
 }

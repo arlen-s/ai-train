@@ -1,4 +1,4 @@
-import { Bell, CircleHelp, Settings, UserRound } from "lucide-react";
+import { Bell, CircleHelp, PanelBottomOpen, Settings, UserRound } from "lucide-react";
 
 import type { WorkbenchData } from "../../lib/types";
 import { BenchmarkSuite } from "./BenchmarkSuite";
@@ -8,7 +8,15 @@ import { PipelineGraph } from "./PipelineGraph";
 import { SensorStack } from "./SensorStack";
 import { ThreeSimulationViewport } from "./ThreeSimulationViewport";
 
-export function IndustrialCockpit({ data }: { data: WorkbenchData }) {
+export function IndustrialCockpit({
+  data,
+  isWorkbenchOpen,
+  onWorkbenchToggle
+}: {
+  data: WorkbenchData;
+  isWorkbenchOpen: boolean;
+  onWorkbenchToggle: () => void;
+}) {
   const cockpit = createCockpitData(data);
 
   return (
@@ -30,6 +38,15 @@ export function IndustrialCockpit({ data }: { data: WorkbenchData }) {
           <label><span>Scope</span><b>{cockpit.controls.scope}</b></label>
         </div>
         <div className="operator-tools">
+          <button
+            aria-label={isWorkbenchOpen ? "收起详细工作台" : "打开详细工作台"}
+            className={`cockpit-tool-button workbench-trigger ${isWorkbenchOpen ? "active" : ""}`}
+            onClick={onWorkbenchToggle}
+            title={isWorkbenchOpen ? "收起详细工作台" : "打开详细工作台"}
+            type="button"
+          >
+            <PanelBottomOpen size={16} />
+          </button>
           <Bell size={16} />
           <CircleHelp size={16} />
           <Settings size={16} />

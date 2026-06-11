@@ -6,13 +6,17 @@ import App from "./App";
 import { createMockWorkbenchData } from "./test/workbench-fixtures";
 
 describe("LawnBot AI workbench", () => {
-  it("renders the cockpit summary from API data", async () => {
+  it("keeps the detailed workbench hidden until the cockpit action opens it", async () => {
     render(<App initialData={createMockWorkbenchData()} />);
 
-    expect(await screen.findByText("LawnBot AI 训练工作台")).toBeInTheDocument();
+    expect(screen.queryByText("LawnBot AI 训练工作台")).not.toBeInTheDocument();
     expect(screen.getByText("LawnBrain")).toBeInTheDocument();
     expect(screen.getByLabelText("Three.js simulation viewport")).toBeInTheDocument();
     expect(screen.getByText("Evaluation & Benchmark Suite")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "打开详细工作台" }));
+
+    expect(await screen.findByText("LawnBot AI 训练工作台")).toBeInTheDocument();
     expect(screen.getByText("Dataset 覆盖率")).toBeInTheDocument();
     expect(screen.getByText("72%")).toBeInTheDocument();
     expect(screen.getByText("det-yolo-v2")).toBeInTheDocument();
@@ -22,6 +26,7 @@ describe("LawnBot AI workbench", () => {
   it("switches workflow tabs and shows RL replay content", async () => {
     render(<App initialData={createMockWorkbenchData()} />);
 
+    await userEvent.click(screen.getByRole("button", { name: "打开详细工作台" }));
     await userEvent.click(screen.getByRole("tab", { name: /RL Replay/ }));
 
     expect(screen.getByText("Episode Replay")).toBeInTheDocument();
@@ -60,7 +65,10 @@ describe("LawnBot AI workbench", () => {
     render(<App fetcher={fetchMock} apiBaseUrl="http://127.0.0.1:8000" />);
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
-    expect(await screen.findByText("LawnBot AI 训练工作台")).toBeInTheDocument();
+    expect(await screen.findByText("LawnBrain")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "打开详细工作台" }));
+
     expect(screen.getByText("Badcase 决策")).toBeInTheDocument();
   });
 });

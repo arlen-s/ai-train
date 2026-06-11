@@ -242,7 +242,7 @@ button {
 
 .industrial-topbar {
   display: grid;
-  grid-template-columns: 190px minmax(0, 1fr) 140px;
+  grid-template-columns: 190px minmax(0, 1fr) 172px;
   gap: 12px;
   align-items: center;
   min-height: 54px;
@@ -324,8 +324,33 @@ button {
 
 .operator-tools {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 8px;
+}
+
+.cockpit-tool-button {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid rgba(108, 152, 157, 0.38);
+  border-radius: 5px;
+  background: rgba(12, 27, 31, 0.86);
+  color: #9ab8ba;
+  padding: 0;
+}
+
+.cockpit-tool-button:hover,
+.cockpit-tool-button.active {
+  border-color: rgba(71, 225, 140, 0.72);
+  background: rgba(33, 83, 62, 0.42);
+  color: #62e99a;
+  box-shadow: 0 0 16px rgba(52, 216, 125, 0.16);
+}
+
+.detailed-workbench {
+  margin-top: 14px;
 }
 
 .industrial-grid {
