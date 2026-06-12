@@ -17,6 +17,10 @@
 - **RL 泛化评估**：覆盖训练/验证/未见场景、动态障碍、碰撞、重复覆盖、边界违规、路径效率等指标。
 - **V3-ready 边界清晰**：保留 `SimulatorAdapter`、`SensorFrame`、真实日志和 ROS/Isaac/Gazebo 接口方向，但不把 V3 能力误标为 V2 已实现。
 
+##预览图
+<img width="1672" height="941" alt="line-ai" src="https://github.com/user-attachments/assets/9b46e0c8-96b5-44d1-bbf1-d34a3864484d" />
+
+
 ## 核心功能
 
 | 模块 | V2 能力 |
